@@ -49,7 +49,7 @@ def inicio():
             session['user_id'] = personal['id']
             session['rol'] = personal['rol']
 
-            flash('Login exitoso', 'succes')
+            flash('Login exitoso', 'success')
             
             return redirect(url_for('principal'))
         
@@ -71,10 +71,20 @@ def signin():
     #capturamos los datos
     nombre = str(request.form['nombre'])
     contrasena = str(request.form['contrasena'])
+    rol = str(request.form['rol'])
 
     #validamos que cumplan con el formato
     if Valida.nombre(nombre) and Valida.contrasena(contrasena):
         repetido = db.buscar_personal(nombre)
 
-        if repetido['nombre'] == nombre:
-            
+        if repetido is not None:
+            flash('usuario existente', 'message')
+            return redirect(url_for('signin'))
+        else:
+            encriptado = flask_bcrypt.generate_password_hash(contrasena).decode('utf-8')
+            db.alta_personal(nombre, encriptado, rol)
+            flash('Usuario dado de alta', 'success')
+            return redirect(url_for('inicio'))
+
+
+        
