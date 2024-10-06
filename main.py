@@ -44,14 +44,32 @@ def inicio():
 
         verificacion = flask_bcrypt.check_password_hash(personal['contrasena'], contrasena)
 
-        # aca verifica la contraseña, si coincide guarda datos redirige
+        # aca verifica la contraseña, si coincide guarda datos
         if verificacion:
             session['user_id'] = personal['id']
             session['rol'] = personal['rol']
 
-            flash('Login exitoso', 'success')
+            #aca redirige segun el rol asignado
+            rol = personal['rol']
+            ruta = None
             
-            return redirect(url_for('principal'))
+            match rol:
+                case 'Administrador':
+                    ruta = 'administracion'
+                case 'Operador':
+                    ruta = 'operaciones'
+                case 'Supervisor':
+                    ruta = 'supervision'
+                case 'Gerente':
+                    ruta = 'Gerente'
+                case 'OpMantenimiento':
+                    ruta = 'mantenimiento'
+                case 'Cliente':
+                    ruta = 'principal'
+
+            flash('Login exitoso', 'success')
+
+            return redirect(url_for(ruta))
         
         else:
             flash('Datos incorrectos', 'message')
@@ -86,5 +104,18 @@ def signin():
             flash('Usuario dado de alta', 'success')
             return redirect(url_for('inicio'))
 
+#endpoint de carga de vehiculo
+@app.route('/vehiculo', methods=['GET', 'POST'])
+def cargar_vehiculo():
+    if request.method == 'GET':
+        return render_template('altaVehiculo.html')
+    
+    #capturamos los datos
+    marca = str(request.form['marca'])
+    modelo = str(request.form['modelo'])
+    anio = int(request.form['anio'])
+    patente = str(request.form['patente'])
+    condicion = str(request.form['condicion'])
 
+    
         
