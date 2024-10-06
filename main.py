@@ -104,6 +104,16 @@ def signin():
             flash('Usuario dado de alta', 'success')
             return redirect(url_for('inicio'))
 
+#endpoint de log out
+@app.route('logout')
+def logout():
+    session.pop('user_id', None)
+    session.pop('rol', None)
+
+    flash('Sesion cerrada con exito', 'success')
+
+    return redirect(url_for('index'))
+
 #endpoint de carga de vehiculo
 @app.route('/vehiculo', methods=['GET', 'POST'])
 def cargar_vehiculo():
