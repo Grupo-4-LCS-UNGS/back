@@ -129,13 +129,14 @@ def cargar_vehiculo():
     condicion = str(request.form['condicion'])
 
     #deberia hacer verificaciones, al menos sobre patente repetida
-    coincidencia = db.consultar_vehiculo()
+    if Valida.patente(patente):
+        coincidencia = db.consultar_vehiculo()
 
-    if coincidencia is not None:
-        flash('Vehiculo ya ingresado', 'message')
-    else:
-        db.alta_vehiculo(marca, modelo, anio, tipo, patente, condicion)
-        flash('Vehiculo ingresado con exito', 'success')
+        if coincidencia is not None:
+            flash('Vehiculo ya ingresado', 'message')
+        else:
+            db.alta_vehiculo(marca, modelo, anio, tipo, patente, condicion)
+            flash('Vehiculo ingresado con exito', 'success')
 
     redirect(url_for('altaVehiculo'))
 
