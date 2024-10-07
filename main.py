@@ -115,7 +115,7 @@ def logout():
     return redirect(url_for('index'))
 
 #endpoint de carga de vehiculo
-@app.route('/vehiculo', methods=['GET', 'POST'])
+@app.route('/altaVehiculo', methods=['GET', 'POST'])
 def cargar_vehiculo():
     if request.method == 'GET':
         return render_template('altaVehiculo.html')
@@ -124,8 +124,28 @@ def cargar_vehiculo():
     marca = str(request.form['marca'])
     modelo = str(request.form['modelo'])
     anio = int(request.form['anio'])
+    tipo = str(request.form['tipo'])
     patente = str(request.form['patente'])
     condicion = str(request.form['condicion'])
 
+    #deberia hacer verificaciones, al menos sobre patente repetida
+    coincidencia = db.consultar_vehiculo()
+
+    if coincidencia is not None:
+        flash('Vehiculo ya ingresado', 'message')
+    else:
+        db.alta_vehiculo(marca, modelo, anio, tipo, patente, condicion)
+        flash('Vehiculo ingresado con exito', 'success')
+
+    redirect(url_for('altaVehiculo'))
+
+#endpoint para modificar vehiculo
+@app.route('/modVehiculo', methods=['GET', 'PUT'])
+def mod_vehiculo():
+    pass
+
     
-        
+
+#ejecucion de la app, camiar cuando este en produccion
+if __name__ == '__main__':
+    app.run(debug=True)

@@ -44,6 +44,7 @@ class Datos:
             marca VARCHAR(30) NOT NULL,
             modelo VARCHAR(30) NOT NULL,
             anio INT NOT NULL,
+            tipo VARCHAR(20) NOT NULL,
             patente VARCHAR(10) NOT NULL,
             condicion VARCHAR(20) NOT NULL)''')
         
@@ -93,10 +94,14 @@ class Datos:
 
         return resultado
 
-
 #METOOS DE VEHICULOS
-    def alta_vehiculo(self):
-        pass #definir la tabla de vehiulos
+    def alta_vehiculo(self, marca, modelo, anio, tipo, patente, condicion):
+        self._abrir_conexion()
+
+        self.cur.execute('INSERT INTO vehiculos(marca, modelo, anio, tipo, patente, condicion) VALUES (%s, %s, %s, %s, %s, %s)', 
+                        (marca, modelo, anio, tipo, patente, condicion))
+
+        self._cerrar_conexion()
 
     def mod_vehiculo(self):
         pass
@@ -106,3 +111,14 @@ class Datos:
 
     def listar_vehiculo(self):
         pass
+
+    def consultar_vehiculo(self, patente):
+        self._abrir_conexion()
+
+        self.cur.execute(f'SELECT * FROM vehiculos WHERE patente = {patente}')
+
+        resultado = self.cur.fetchone()
+
+        self._cerrar_conexion()
+
+        return resultado
