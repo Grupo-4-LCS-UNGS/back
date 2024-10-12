@@ -1,10 +1,10 @@
 from datetime import datetime
 from sqlalchemy import Date
 from sqlalchemy.orm import Mapped, mapped_column
-from database import db
+from main import db
 
 class Vehiculo(db.Model):
-    id: Mapped[int] = mapped_column(primary_key=True)
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     marca: Mapped[str]
     modelo: Mapped[str]
     matricula: Mapped[str]
@@ -18,3 +18,4 @@ class Vehiculo(db.Model):
             'matricula': self.matricula,
             'anio': self.anio.strftime('%Y-%m-%d')
         }
+    

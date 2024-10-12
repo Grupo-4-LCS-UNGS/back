@@ -1,4 +1,4 @@
-from database import db
+from main import db
 from models.vehiculo import Vehiculo
 
 class VehiculoDao:
@@ -18,3 +18,7 @@ class VehiculoDao:
 
     def encontrarPorId(self, id):
         return db.session.get(Vehiculo, id)
+    
+    def encontrarPorPatente(self, patente):
+        return Vehiculo.query.filter_by(patente= patente).first()
+    

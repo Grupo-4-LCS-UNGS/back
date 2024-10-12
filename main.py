@@ -1,27 +1,25 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session
-
 from flask_bcrypt import Bcrypt
+from flask_sqlalchemy import SQLAlchemy
 
 from validaciones import *
-
-from database import *
-
 from config import Config
 
+from dao.vehiculoDao import VehiculoDao
+from models.vehiculo import Vehiculo
+
 #instancia de flask
-app = Flask(__name__, template_folder='front/html', static_folder='front/static')
+app = Flask(__name__)
+
+app.config['SQLALCHEMY_DATABASE_URI'] = Config.FULL_URL_DB
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SECRET KEY'] = Config.SECRET_KEY
 
 #instancia para encriptar
 flask_bcrypt = Bcrypt(app)
 
-#instancia de la base de datos
-db = Datos(Config.HOST,
-           Config.PORT,
-           Config.USER,
-           Config.PASSWORD,
-           Config.DB)
-
-app.config['SECRET KEY'] = Config.SECRET_KEY
+#instancia del ORM
+db = SQLAlchemy(app)
 
 #endpoint de la pagina principal
 @app.route('/')
@@ -114,8 +112,13 @@ def logout():
 
     return redirect(url_for('index'))
 
+#endpoint para listar vehiculos
+@app.route('/vehiculos')
+def listar_vehiculos():
+    
+
 #endpoint de carga de vehiculo
-@app.route('/altaVehiculo', methods=['GET', 'POST'])
+@app.route('/vehiculo/alta', methods=['GET', 'POST'])
 def cargar_vehiculo():
     if request.method == 'GET':
         return render_template('altaVehiculo.html')
@@ -124,24 +127,25 @@ def cargar_vehiculo():
     marca = str(request.form['marca'])
     modelo = str(request.form['modelo'])
     anio = int(request.form['anio'])
-    tipo = str(request.form['tipo'])
     patente = str(request.form['patente'])
-    condicion = str(request.form['condicion'])
+    anio = str(request.form['anio'])
+
+    vehiculo = Vehiculo(marca, modelo, patente, anio)
 
     #deberia hacer verificaciones, al menos sobre patente repetida
     if Valida.patente(patente):
-        coincidencia = db.consultar_vehiculo()
+        coincidencia = VehiculoDao.encontrarPorPatente(patente)
 
         if coincidencia is not None:
             flash('Vehiculo ya ingresado', 'message')
         else:
-            db.alta_vehiculo(marca, modelo, anio, tipo, patente, condicion)
+            VehiculoDao.agregar(vehiculo)
             flash('Vehiculo ingresado con exito', 'success')
 
     redirect(url_for('altaVehiculo'))
 
 #endpoint para modificar vehiculo
-@app.route('/modVehiculo', methods=['GET', 'PUT'])
+@app.route('/vehiculo/mod', methods=['GET', 'PUT'])
 def mod_vehiculo():
     pass
 
