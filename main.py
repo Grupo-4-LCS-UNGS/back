@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, session
+from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify
 from flask_bcrypt import Bcrypt
 from flask_sqlalchemy import SQLAlchemy
 
@@ -115,7 +115,8 @@ def logout():
 #endpoint para listar vehiculos
 @app.route('/vehiculos')
 def listar_vehiculos():
-    
+    vehiculos = VehiculoDao.listar()
+    return jsonify(vehiculos)
 
 #endpoint de carga de vehiculo
 @app.route('/vehiculo/alta', methods=['GET', 'POST'])
@@ -128,7 +129,6 @@ def cargar_vehiculo():
     modelo = str(request.form['modelo'])
     anio = int(request.form['anio'])
     patente = str(request.form['patente'])
-    anio = str(request.form['anio'])
 
     vehiculo = Vehiculo(marca, modelo, patente, anio)
 
@@ -145,10 +145,28 @@ def cargar_vehiculo():
     redirect(url_for('altaVehiculo'))
 
 #endpoint para modificar vehiculo
-@app.route('/vehiculo/mod', methods=['GET', 'PUT'])
+@app.route('/vehiculo/mod', methods=['PUT'])
 def mod_vehiculo():
-    pass
+    #capturo los datos
+    marca = str(request.form['marca'])
+    modelo = str(request.form['modelo'])
+    anio = int(request.form['anio'])
+    patente = str(request.form['patente'])
 
+    #encuentro la entrada a modificar
+    coincidencia = VehiculoDao.encontrarPorPatente(patente)
+
+    #actualizo y guardo cambios
+    coincidencia.marca = marca
+    coincidencia.modelo = modelo
+    coincidencia.matricula = patente
+    coincidencia.anio = anio
+    
+    VehiculoDao.actualizar()
+
+    return flash('modificado con exito', 'success')
+
+#endpoint para dar de baja un vehiculo
     
 
 #ejecucion de la app, camiar cuando este en produccion
