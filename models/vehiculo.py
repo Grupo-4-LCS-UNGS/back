@@ -1,7 +1,6 @@
 from datetime import datetime
 from sqlalchemy import Date
-from sqlalchemy.orm import Mapped
-from sqlalchemy.testing.schema import mapped_column
+from sqlalchemy.orm import Mapped, mapped_column
 from database import db
 
 class Vehiculo(db.Model):
@@ -12,7 +11,6 @@ class Vehiculo(db.Model):
     anio: Mapped[datetime.date] = mapped_column(Date)
 
     def serialize(self):
-        print(self.anio)
         return {
             'id': self.id,
             'marca': self.marca,
