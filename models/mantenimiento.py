@@ -28,6 +28,10 @@ class Mantenimiento(db.Model):
         return Mantenimiento.query.all()
 
     @staticmethod
+    def listar_json():
+        return [mantenimiento.serialize() for mantenimiento in Mantenimiento.listar()]
+
+    @staticmethod
     def agregar(mantenimiento):
         db.session.add(mantenimiento)
         db.session.commit()

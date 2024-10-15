@@ -2,6 +2,8 @@ from sqlalchemy import Date, ForeignKey
 from sqlalchemy.orm import Mapped, relationship, mapped_column
 from main import db
 from models.modelo_vehiculo import ModeloVehiculo
+from routes.vehiculos import listar_vehiculos
+
 
 class Vehiculo(db.Model):
     id:         Mapped[int] = mapped_column(primary_key=True)
@@ -23,6 +25,10 @@ class Vehiculo(db.Model):
     @staticmethod
     def listar():
         return Vehiculo.query.all()
+
+    @staticmethod
+    def listar_json():
+        return [vehiculo.serialize() for vehiculo in Vehiculo.listar()]
 
     @staticmethod
     def agregar(vehiculo):
