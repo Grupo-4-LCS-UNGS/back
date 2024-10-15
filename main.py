@@ -5,7 +5,6 @@ from flask_sqlalchemy import SQLAlchemy
 from validaciones import *
 from config import Config
 
-from dao.vehiculoDao import VehiculoDao
 from models.vehiculo import Vehiculo
 
 #instancia de flask
@@ -115,7 +114,7 @@ def logout():
 #endpoint para listar vehiculos
 @app.route('/vehiculos')
 def listar_vehiculos():
-    vehiculos = VehiculoDao.listar()
+    vehiculos = Vehiculo.listar()
     return jsonify(vehiculos)
 
 #endpoint de carga de vehiculo
@@ -134,12 +133,12 @@ def cargar_vehiculo():
 
     #deberia hacer verificaciones, al menos sobre patente repetida
     if Valida.patente(patente):
-        coincidencia = VehiculoDao.encontrarPorPatente(patente)
+        coincidencia = Vehiculo.encontrarPorPatente(patente)
 
         if coincidencia is not None:
             flash('Vehiculo ya ingresado', 'message')
         else:
-            VehiculoDao.agregar(vehiculo)
+            Vehiculo.agregar(vehiculo)
             flash('Vehiculo ingresado con exito', 'success')
 
     redirect(url_for('altaVehiculo'))
@@ -154,7 +153,7 @@ def mod_vehiculo():
     patente = str(request.form['patente'])
 
     #encuentro la entrada a modificar
-    coincidencia = VehiculoDao.encontrarPorPatente(patente)
+    coincidencia = Vehiculo.encontrarPorPatente(patente)
 
     #actualizo y guardo cambios
     coincidencia.marca = marca
@@ -162,12 +161,12 @@ def mod_vehiculo():
     coincidencia.matricula = patente
     coincidencia.anio = anio
     
-    VehiculoDao.actualizar()
+    Vehiculo.actualizar()
 
     return flash('modificado con exito', 'success')
 
 #endpoint para dar de baja un vehiculo
-    
+#@app.route('/vehiculo/baja')
 
 #ejecucion de la app, camiar cuando este en produccion
 if __name__ == '__main__':

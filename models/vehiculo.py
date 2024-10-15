@@ -8,7 +8,7 @@ class Vehiculo(db.Model):
     id_modelo:  Mapped[int] = mapped_column(ForeignKey('modelo_vehiculo.id'), nullable=False)
     matricula:  Mapped[str]
     id_traccar: Mapped[int]
-    estado: Mapped[str]
+    estado:     Mapped[str]
     modelo:     Mapped['ModeloVehiculo'] = relationship('ModeloVehiculo', backref='autos')
 
     def serialize(self):
