@@ -9,7 +9,7 @@ class Vehiculo(db.Model):
     matricula:  Mapped[str]
     id_traccar: Mapped[int]
     estado:     Mapped[str]
-    modelo:     Mapped['ModeloVehiculo'] = relationship('ModeloVehiculo', backref='autos')
+    modelo:     Mapped['ModeloVehiculo'] = relationship('ModeloVehiculo', backref='vehiculos')
 
     def serialize(self):
         return {
