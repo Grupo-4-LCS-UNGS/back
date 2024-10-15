@@ -58,9 +58,21 @@ def mod_vehiculo():
     
     Vehiculo.actualizar()
 
-    return flash('modificado con exito', 'success')
+    flash('modificado con exito', 'success')
+
+    redirect(url_for('listar_vehiculos'))
 
 #endpoint para dar de baja un vehiculo
 @vehiculos.route('/vehiculo/baja')
 def baja_vehiculo():
-    pass
+    patente = request.form['patente']
+
+    unidad = Vehiculo.encontrarPorPatente(patente)
+
+    unidad.estado = 'Baja'
+
+    Vehiculo.actualizar()
+
+    flash('Vehiculo dado de baja', 'success')
+
+    redirect(url_for('listar_vehiculos'))
