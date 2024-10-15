@@ -16,7 +16,7 @@ class Mantenimiento(db.Model):
     def serialize(self):
         return {
             'id': self.id,
-            'id_vehiculo': self.id_vehiculo,
+            'vehiculo': self.vehiculo.serialize(),
             'fecha_inicio': self.fecha_inicio,
             'fecha_fin': self.fecha_fin,
             'estado': self.estado,

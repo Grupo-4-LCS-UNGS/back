@@ -13,7 +13,7 @@ class Repuesto(db.Model):
     def serialize(self):
         return {
             'id': self.id,
-            'id_modelo_vehiculo': self.id_modelo_vehiculo,
+            'modelo_vehiculo': self.modelo_vehiculo.serialize(),
             'nombre': self.nombre,
             'stock': self.stock,
             'umbral_minimo': self.umbral_minimo
