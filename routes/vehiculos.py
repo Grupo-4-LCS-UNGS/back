@@ -7,13 +7,13 @@ from models.vehiculo import Vehiculo
 vehiculos = Blueprint('vehiculos', __name__)
 
 #endpoint para listar vehiculos
-@vehiculos.route('/listado_vehiculos')
+@vehiculos.route('/vehiculos')
 def listar_vehiculos():
-    vehiculos = Vehiculo.listar()
+    vehiculos = Vehiculo.listar_json()
     return jsonify(vehiculos)
 
 #endpoint de carga de vehiculo
-@vehiculos.route('/vehiculo/alta', methods=['GET', 'POST'])
+@vehiculos.route('/vehiculos/alta', methods=['GET', 'POST'])
 def cargar_vehiculo():
     if request.method == 'GET':
         return render_template('altaVehiculo.html')
@@ -39,7 +39,7 @@ def cargar_vehiculo():
     redirect(url_for('listar_vehiculos'))
 
 #endpoint para modificar vehiculo
-@vehiculos.route('/vehiculo/mod', methods=['PUT'])
+@vehiculos.route('/vehiculos/mod', methods=['PUT'])
 def mod_vehiculo():
     #capturo los datos
     marca = str(request.form['marca'])
@@ -63,7 +63,7 @@ def mod_vehiculo():
     redirect(url_for('listar_vehiculos'))
 
 #endpoint para dar de baja un vehiculo
-@vehiculos.route('/vehiculo/baja')
+@vehiculos.route('/vehiculos/baja')
 def baja_vehiculo():
     patente = request.form['patente']
 

@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from datetime import datetime
 from sqlalchemy import Date, ForeignKey
-from main import db
+from extensiones import db
 from models.vehiculo import Vehiculo
 
 class Mantenimiento(db.Model):

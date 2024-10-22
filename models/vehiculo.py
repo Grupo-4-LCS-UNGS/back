@@ -1,8 +1,7 @@
-from sqlalchemy import Date, ForeignKey
+from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, relationship, mapped_column
-from main import db
+from extensiones import db
 from models.modelo_vehiculo import ModeloVehiculo
-from routes.vehiculos import listar_vehiculos
 
 
 class Vehiculo(db.Model):

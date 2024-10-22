@@ -1,5 +1,5 @@
 from flask import Blueprint, request, render_template, session, redirect, flash, url_for
-from main import db, flask_bcrypt
+from extensiones import db, bcrypt
 from validaciones import *
 
 usuarios = Blueprint('usuarios', __name__)
@@ -23,7 +23,7 @@ def signin():
             flash('usuario existente', 'message')
             return redirect(url_for('signin'))
         else:
-            encriptado = flask_bcrypt.generate_password_hash(contrasena).decode('utf-8')
+            encriptado = bcrypt.generate_password_hash(contrasena).decode('utf-8')
             db.alta_personal(nombre, encriptado, rol)
             flash('Usuario dado de alta', 'success')
             return redirect(url_for('inicio'))
@@ -42,7 +42,7 @@ def inicio():
     if Valida.nombre(nombre) and Valida.contrasena(contrasena):
         personal = db.buscar_personal(nombre)
 
-        verificacion = flask_bcrypt.check_password_hash(personal['contrasena'], contrasena)
+        verificacion = bcrypt.check_password_hash(personal['contrasena'], contrasena)
 
         # aca verifica la contraseña, si coincide guarda datos
         if verificacion:

@@ -1,6 +1,7 @@
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from main import db
+from extensiones import db
+from models.modelo_vehiculo import ModeloVehiculo
 
 class Repuesto(db.Model):
     id:                 Mapped[int] = mapped_column(primary_key=True)

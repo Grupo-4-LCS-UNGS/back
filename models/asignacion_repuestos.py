@@ -1,6 +1,6 @@
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column
-from main import db
+from extensiones import db
 
 class AsignacionRepuestos(db.Model):
     id_mantenimiento: Mapped[int] = mapped_column(ForeignKey('mantenimiento.id'), primary_key=True,nullable=False)
