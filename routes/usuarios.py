@@ -78,7 +78,7 @@ def inicio():
 
 
 #endpoint de log out
-@usuarios.route('logout')
+@usuarios.route('/logout')
 def logout():
     session.pop('user_id', None)
     session.pop('rol', None)
