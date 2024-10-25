@@ -10,6 +10,10 @@ from routes.vehiculos import vehiculos
 from routes.mantenimientos import mantenimientos
 from routes.repuestos import repuestos
 
+from dotenv import load_dotenv
+import os
+from colorama import Fore, Back, Style
+
 
 #instancia de flask
 app = Flask(__name__)
@@ -31,6 +35,26 @@ app.register_blueprint(mantenimientos)
 app.register_blueprint(repuestos)
 app.register_blueprint(marcas_vehiculos)
 
+if not os.getenv('ENV'):
+    os.environ['ENV'] = 'development'
+    env_file = '.env.development'
+    load_dotenv(env_file)
+    
+
 #ejecucion de la app, camiar cuando este en produccion
 if __name__ == '__main__':
-    app.run(debug=True)
+    with app.app_context():
+        db.create_all()
+    
+    
+    debuggear = True
+    if os.getenv('ENV') == 'development':
+        app.run(debug=debuggear)
+    elif os.getenv('ENV') == 'production':
+        debuggear = False
+        
+    print(Back.RED + Fore.WHITE + Style.BRIGHT + 'Iniciando el Transportador' + Style.RESET_ALL)
+    print(Back.GREEN + Fore.WHITE + Style.BRIGHT +  'Ambiente: ' + os.getenv('ENV') + Style.RESET_ALL)
+        
+    
+    app.run(debug=debuggear, port=os.getenv('APP_PORT'), host=os.getenv('APP_HOST'))
