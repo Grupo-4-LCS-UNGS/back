@@ -25,13 +25,17 @@ class Repuesto(db.Model):
         return Repuesto.query.all()
 
     @staticmethod
-    def agregar(vehiculo):
-        db.session.add(vehiculo)
+    def listar_json():
+        return [repuesto.serialize() for repuesto in Repuesto.listar()]
+
+    @staticmethod
+    def agregar(repuesto):
+        db.session.add(repuesto)
         db.session.commit()
 
     @staticmethod
-    def eliminar(vehiculo):
-        db.session.delete(vehiculo)
+    def eliminar(repuesto):
+        db.session.delete(repuesto)
         db.session.commit()
 
     @staticmethod

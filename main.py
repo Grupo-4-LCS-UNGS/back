@@ -7,6 +7,8 @@ from config import Config
 from routes.usuarios import usuarios
 from routes.vehiculos import vehiculos
 from routes.mantenimientos import mantenimientos
+from routes.repuestos import repuestos
+
 
 #instancia de flask
 app = Flask(__name__)
@@ -25,6 +27,7 @@ bcrypt.init_app(app)
 app.register_blueprint(usuarios)
 app.register_blueprint(vehiculos)
 app.register_blueprint(mantenimientos)
+app.register_blueprint(repuestos)
 
 #ejecucion de la app, camiar cuando este en produccion
 if __name__ == '__main__':
