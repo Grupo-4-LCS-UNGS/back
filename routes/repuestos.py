@@ -9,13 +9,13 @@ repuestos = Blueprint('repuestos', __name__)
 def listar_repuestos():
     return Repuesto.listar_json()
 
-@repuestos.route('/api/repuestos/', methods=['POST'])
+@repuestos.route('/repuestos/', methods=['POST'])
 def alta_repuesto():
     data = request.get_json()
     Repuesto.agregar(Repuesto(**data))
     return Repuesto.listar_json()
 
-@repuestos.route('/api/repuestos/<int:id>', methods=['DELETE'])
+@repuestos.route('/repuestos/<int:id>', methods=['DELETE'])
 def baja_repuesto(id):
     repuesto = Repuesto.encontrarPorId(id)
     if repuesto == None:
