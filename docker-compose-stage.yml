@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   api:
-    image: ghcr.io/Grupo-4-LCS-UNGS/back/g4-api-server-dev:latest
+    image: ghcr.io/grupo-4-lcs-ungs/back/g4-api-server-dev:latest
     container_name: g4-api
     ports:
       - "5001:5001"
