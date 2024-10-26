@@ -13,7 +13,7 @@ app = Flask(__name__)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = Config.FULL_URL_DB
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SECRET KEY'] = Config.SECRET_KEY
+app.config['SECRET_KEY'] = Config.SECRET_KEY
 
 #instancia del ORM
 db.init_app(app)
@@ -25,6 +25,10 @@ bcrypt.init_app(app)
 app.register_blueprint(usuarios)
 app.register_blueprint(vehiculos)
 app.register_blueprint(mantenimientos)
+
+with app.app_context():
+    db.drop_all()
+    db.create_all() 
 
 #ejecucion de la app, camiar cuando este en produccion
 if __name__ == '__main__':

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inicio de Sesión</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h2>Inicio de Sesión</h2>
+
+        <!-- Mensajes flash para mostrar notificaciones -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            <div class="flash-messages">
+              {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">{{ message }}</div>
+              {% endfor %}
+            </div>
+          {% endif %}
+        {% endwith %}
+
+        <!-- Formulario de inicio de sesión -->
+        <form action="{{ url_for('usuarios.inicio') }}" method="POST">
+            <div class="form-group">
+                <label for="nombre">Nombre de usuario:</label>
+                <input type="text" id="nombre" name="nombre" required>
+            </div>
+
+            <div class="form-group">
+                <label for="contrasena">Contraseña:</label>
+                <input type="password" id="contrasena" name="contrasena" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Iniciar Sesión</button>
+        </form>
+
+        <p>¿No tienes una cuenta? <a href="{{ url_for('usuarios.signin') }}">Regístrate aquí</a></p>
+    </div>
+</body>
+</html>
