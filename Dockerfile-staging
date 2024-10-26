@@ -26,4 +26,4 @@ COPY . .
 EXPOSE 5001
 
 # Define the command to run the application
-CMD ["ENV=staging","python3", "main.py"]
+CMD ["python3", "main.py"]
