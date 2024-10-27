@@ -6,7 +6,7 @@ from models.vehiculo import Vehiculo
 
 class Mantenimiento(db.Model):
     id:           Mapped[int] = mapped_column(primary_key=True)
-    id_vehiculo:  Mapped[int] = mapped_column(ForeignKey('vehiculo.id'), nullable=False)
+    id_vehiculo:  Mapped[int] = mapped_column(ForeignKey('vehiculo.id'))
     fecha_inicio: Mapped[datetime.date] = mapped_column(Date)
     fecha_fin:    Mapped[datetime.date] = mapped_column(Date)
     estado:       Mapped[str]
