@@ -11,6 +11,7 @@ class Mantenimiento(db.Model):
     fecha_fin:    Mapped[datetime.date] = mapped_column(Date)
     estado:       Mapped[str]
     descripcion:  Mapped[str]
+    tipo:         Mapped[str]
     vehiculo:     Mapped['Vehiculo'] = relationship('Vehiculo', backref='mantenimiento')
 
     def serialize(self):
