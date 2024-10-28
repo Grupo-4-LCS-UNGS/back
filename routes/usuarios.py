@@ -1,15 +1,13 @@
-from flask import Blueprint, request, render_template, session, redirect, flash, url_for
+from flask import Blueprint, request, session, url_for, jsonify
 from extensiones import db, bcrypt
 from validaciones import *
+from models.usuario import Usuario
 
 usuarios = Blueprint('usuarios', __name__)
 
 #endpoint de sign in
-@usuarios.route('/signin', methods=['GET', 'POST'])
+@usuarios.route('/signin', methods=['POST'])
 def signin():
-    if request.method == 'GET':
-        return render_template('/signin.html')
-
     #capturamos los datos
     nombre = str(request.form['nombre'])
     contrasena = str(request.form['contrasena'])
@@ -17,72 +15,42 @@ def signin():
 
     #validamos que cumplan con el formato
     if Valida.nombre(nombre) and Valida.contrasena(contrasena):
-        repetido = db.buscar_personal(nombre)
+        repetido = Usuario.buscar(nombre)
 
-        if repetido is not None:
-            flash('usuario existente', 'message')
-            return redirect(url_for('signin'))
-        else:
+        if repetido is None:
             encriptado = bcrypt.generate_password_hash(contrasena).decode('utf-8')
-            db.alta_personal(nombre, encriptado, rol)
-            flash('Usuario dado de alta', 'success')
-            return redirect(url_for('inicio'))
+            respuesta = Usuario.agregar(nombre, encriptado, rol)
+
+            jsonify(id= respuesta, estado= 200)
+
+        else:
+            jsonify(error= 'usuario ya ingresado', estado= 400)
 
 #endpoint de login
-@usuarios.route('/login', methods=['GET', 'POST'])
+@usuarios.route('/login', methods=['POST'])
 def inicio():
-    if request.method == 'GET':
-        return render_template('login.html')
-    
     #capturamos los datos 
     nombre = str(request.form['nombre'])
     contrasena = str(request.form['contrasena'])
 
     #validamos que cumplan con el formato
     if Valida.nombre(nombre) and Valida.contrasena(contrasena):
-        personal = db.buscar_personal(nombre)
+        personal = Usuario.buscar(nombre)
 
-        verificacion = bcrypt.check_password_hash(personal['contrasena'], contrasena)
+        verificacion = bcrypt.check_password_hash(personal.contrasena, contrasena)
 
         # aca verifica la contraseña, si coincide guarda datos
         if verificacion:
-            session['user_id'] = personal['id']
-            session['rol'] = personal['rol']
-
-            #aca redirige segun el rol asignado
-            rol = personal['rol']
-            ruta = None
+            session['user_id'] = personal.id
+            session['rol'] = personal.rol
             
-            match rol:
-                case 'Administrador':
-                    ruta = 'administracion'
-                case 'Operador':
-                    ruta = 'operaciones'
-                case 'Supervisor':
-                    ruta = 'supervision'
-                case 'Gerente':
-                    ruta = 'Gerente'
-                case 'OpMantenimiento':
-                    ruta = 'mantenimiento'
-                case 'Cliente':
-                    ruta = 'principal'
-
-            flash('Login exitoso', 'success')
-
-            return redirect(url_for(ruta))
-        
+            jsonify(id= personal.id, nombre= personal.nombre, rol= personal.rol, estado= 200)
+                    
         else:
-            flash('Datos incorrectos', 'message')
-
-            return redirect(url_for('login'))
-
+            jsonify(error= 'contraseña incorrecta', estado= 400)
 
 #endpoint de log out
 @usuarios.route('/logout')
 def logout():
     session.pop('user_id', None)
     session.pop('rol', None)
-
-    flash('Sesion cerrada con exito', 'success')
-
-    return redirect(url_for('index'))

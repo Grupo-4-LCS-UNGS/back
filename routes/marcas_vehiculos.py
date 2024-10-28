@@ -14,7 +14,7 @@ def alta_marca():
     MarcaVehiculo.agregar(MarcaVehiculo(**data))
     return MarcaVehiculo.listar_json()
 
-@marcas_vehiculos.route('/marcas_vehiculos/<int:id>', methods=['UPDATE'])
+@marcas_vehiculos.route('/marcas_vehiculos/<int:id>', methods=['PUT'])
 def actualizar_marca(id):
     marca = MarcaVehiculo.encontrarPorId(id)
     if marca == None:

@@ -1,4 +1,6 @@
-from flask import Blueprint, jsonify, request, render_template
+from flask import Blueprint, jsonify, request, redirect, url_for
+
+from validaciones import *
 
 from models.vehiculo import Vehiculo
 from models.mantenimiento import Mantenimiento
@@ -12,8 +14,26 @@ def listar_mantenimientos():
 
 @mantenimientos.route('/mantenimientos/alta')
 def cargar_mantenimiento():
-    if request.method == 'GET':
-        return render_template()
+
+    matricula = str(request.form['matricula'])
+    tipo = str(request.form['tipo'])
+    inicio = str(request.form['inicio'])
+    fin = str(request.form['fin'])
+    descripcion = str(request.form['descripcion'])
+
+    vehiculo = Vehiculo.encontrarPorPatente(matricula)
+
+    if vehiculo is not None:
+        mantenimiento = Mantenimiento(
+            id_vehiculo= vehiculo.id,
+            fecha_inicio= inicio,
+            fecha_fin= fin,
+            tipo= tipo,
+            descripcion= descripcion
+        )
+        Mantenimiento.agregar(mantenimiento)
+
+    redirect(url_for('listar_mantenimientos'))
 
 @mantenimientos.route('/mantenimientos/mod')
 def mod_mantenimiento():

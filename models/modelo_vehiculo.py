@@ -5,7 +5,7 @@ from models.marca_vehiculo import MarcaVehiculo
 
 class ModeloVehiculo(db.Model):
     id:                 Mapped[int] =   mapped_column(primary_key=True)
-    id_marca_vehiculo:  Mapped[int] = mapped_column(ForeignKey('marca_vehiculo.id'), nullable=False)
+    id_marca_vehiculo:  Mapped[int] = mapped_column(ForeignKey('marca_vehiculo.id'))
     nombre:             Mapped[str]
     marca:              Mapped['MarcaVehiculo'] = relationship('MarcaVehiculo', backref='modelos')
 

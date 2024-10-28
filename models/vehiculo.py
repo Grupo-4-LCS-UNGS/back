@@ -6,7 +6,7 @@ from models.modelo_vehiculo import ModeloVehiculo
 
 class Vehiculo(db.Model):
     id:         Mapped[int] = mapped_column(primary_key=True)
-    id_modelo:  Mapped[int] = mapped_column(ForeignKey('modelo_vehiculo.id'), nullable=False)
+    id_modelo:  Mapped[int] = mapped_column(ForeignKey('modelo_vehiculo.id'))
     matricula:  Mapped[str]
     id_traccar: Mapped[int]
     estado:     Mapped[str]
