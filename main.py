@@ -25,6 +25,10 @@ db.init_app(app)
 #instancia para encriptar
 bcrypt.init_app(app)
 
+#para la creacion de tablas
+app.app_context().push()
+db.create_all()
+
 #registramos las rutas
 app.register_blueprint(usuarios)
 app.register_blueprint(vehiculos)
