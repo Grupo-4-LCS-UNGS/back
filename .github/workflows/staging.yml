@@ -3,7 +3,7 @@ name: Deploy main en Potus WS
 on:
   push:
     branches:
-      - staging
+      - main
 
 jobs:
   build:
