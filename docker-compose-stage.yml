@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  api:
+    image: ghcr.io/grupo-4-lcs-ungs/back/g4-api-server-dev:latest
+    container_name: g4-api
+    ports:
+      - "5001:5001"
+    environment:
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: ${DB_NAME}
+      SECRET_KEY: ${SECRET_KEY}
+      APP_PORT: ${APP_PORT}
+      APP_HOST: ${APP_HOST}
+      ENV: ${ENV}
+    restart: unless-stopped
+
+
+networks:
+  default:
+      name: pws_frontend_default
+      external: true
