@@ -52,9 +52,23 @@ def abrir_conexion(db_nombre):
     base.set_isolation_level(extensions.ISOLATION_LEVEL_AUTOCOMMIT)
     return base
 
+def crearTriggers():
+    base = abrir_conexion(Config.DB)
+    cur = base.cursor()
+
+    with open('trigger_orden_compra.sql', 'r') as file:
+        sql = file.read()
+    try:
+        cur.execute(sql)
+    except Exception as e:
+        print(e)
+    finally:
+        cur.close()
+        base.close()
 
 if __name__ == '__main__':
     crear_base() #esto instancia crea la base de datos
     crear_tablas() #esto crea las tablas
+    crearTriggers()
     #db.drop_all() #esto borra las tablas
     #db.create_all() #esto las crea nuevamente

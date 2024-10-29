@@ -1,4 +1,5 @@
 DROP TABLE IF EXISTS asignacion_repuestos;
+DROP TABLE IF EXISTS orden_compra;
 DROP TABLE IF EXISTS repuesto;
 DROP TABLE IF EXISTS mantenimiento;
 DROP TABLE IF EXISTS vehiculo;
@@ -41,12 +42,14 @@ CREATE TABLE repuesto (
 	id_modelo_vehiculo int,
 	nombre text,
 	stock int,
-	umbral_minimo int
+	umbral_minimo int,
+	umbral_maximo int
 );
 
 CREATE TABLE asignacion_repuestos (
 	id_mantenimiento int,
-	id_repuesto int
+	id_repuesto int,
+	cantidad int
 );
 
 CREATE TABLE proveedor (
@@ -56,6 +59,13 @@ CREATE TABLE proveedor (
 	telefono text,
 	email text,
 	cuit text
+);
+
+CREATE TABLE orden_compra (
+	id serial,
+	id_repuesto int,
+	cantidad int,
+	estado text
 );
 
 ALTER TABLE proveedor ADD CONSTRAINT proveedor_pk PRIMARY KEY (id);
@@ -78,3 +88,6 @@ ALTER TABLE repuesto ADD CONSTRAINT repuesto_id_modelo_vehiculo_fk FOREIGN KEY (
 ALTER TABLE asignacion_repuestos ADD CONSTRAINT asignacion_repuestos_pk PRIMARY KEY (id_mantenimiento, id_repuesto);
 ALTER TABLE asignacion_repuestos ADD CONSTRAINT asignacion_repuestos_id_mantenimiento_fk FOREIGN KEY (id_mantenimiento) REFERENCES mantenimiento(id);
 ALTER TABLE asignacion_repuestos ADD CONSTRAINT asignacion_repuestos_id_repuesto_fk FOREIGN KEY (id_repuesto) REFERENCES repuesto(id);
+
+ALTER TABLE orden_compra ADD CONSTRAINT orden_compra_pk PRIMARY KEY (id);
+ALTER TABLE orden_compra ADD CONSTRAINT orden_compra_id_repuesto_fk FOREIGN KEY (id_repuesto) REFERENCES repuesto(id);

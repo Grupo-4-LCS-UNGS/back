@@ -2,15 +2,17 @@ from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from extensiones import db
 from models.modelo_vehiculo import ModeloVehiculo
+from models.proveedor import Proveedor
 
 class Repuesto(db.Model):
     id:                 Mapped[int] = mapped_column(primary_key=True)
-    id_proveedor: Mapped[int] = mapped_column(ForeignKey('proveedor.id'))
+    id_proveedor:       Mapped[int] = mapped_column(ForeignKey('proveedor.id'))
     id_modelo_vehiculo: Mapped[int] = mapped_column(ForeignKey('modelo_vehiculo.id'))
     nombre:             Mapped[str]
     stock:              Mapped[str]
     umbral_minimo:      Mapped[int]
-    proveedor: Mapped['Proveedor'] = relationship('Proveedor', backref='proveedor')
+    umbral_maximo:      Mapped[int]
+    proveedor:          Mapped['Proveedor'] = relationship('Proveedor', backref='proveedor')
     modelo_vehiculo:    Mapped['ModeloVehiculo'] = relationship('ModeloVehiculo', backref='repuestos')
 
     def serialize(self):
@@ -20,7 +22,8 @@ class Repuesto(db.Model):
             'modelo_vehiculo': self.modelo_vehiculo.serialize() if self.modelo_vehiculo else None,
             'nombre': self.nombre,
             'stock': self.stock,
-            'umbral_minimo': self.umbral_minimo
+            'umbral_minimo': self.umbral_minimo,
+            'umbral_maximo': self.umbral_maximo
         }
 
     @staticmethod

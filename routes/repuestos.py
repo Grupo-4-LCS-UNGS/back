@@ -13,7 +13,7 @@ def listar_repuestos():
 def alta_repuesto():
     data = request.get_json()
     Repuesto.agregar(Repuesto(**data))
-    return Repuesto.listar_json()
+    return 'OK', 202
 
 @repuestos.route('/repuestos/<int:id>', methods=['DELETE'])
 def baja_repuesto(id):
@@ -21,4 +21,4 @@ def baja_repuesto(id):
     if repuesto == None:
         return 'Repuesto no encontrado', 404
     Repuesto.eliminar(repuesto)
-    return Repuesto.listar_json()
+    return 'OK', 202

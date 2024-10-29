@@ -1,6 +1,7 @@
 from flask import Flask
 from extensiones import db, bcrypt
 from routes.marcas_vehiculos import marcas_vehiculos
+from routes.ordenes_compra import ordenes_compras
 from routes.proveedores import proveedores
 
 from validaciones import *
@@ -36,6 +37,7 @@ app.register_blueprint(mantenimientos)
 app.register_blueprint(repuestos)
 app.register_blueprint(marcas_vehiculos)
 app.register_blueprint(proveedores)
+app.register_blueprint(ordenes_compras)
 
 #ejecucion de la app, camiar cuando este en produccion
 if __name__ == '__main__':

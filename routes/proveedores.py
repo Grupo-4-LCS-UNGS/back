@@ -25,7 +25,7 @@ def actualizar_proveedor(id):
     proveedor.telefono = data.get('telefono', proveedor.telefono)
     proveedor.cuit = data.get('cuit', proveedor.cuit)
     Proveedor.actualizar()
-    return Proveedor.listar_json()
+    return 'OK', 202
 
 @proveedores.route('/proveedores/<int:id>', methods=['DELETE'])
 def baja_proveedor(id):
@@ -33,4 +33,4 @@ def baja_proveedor(id):
     if proveedor == None:
         return 'Proveedor no encontrado', 404
     Proveedor.eliminar(proveedor)
-    return Proveedor.listar_json()
+    return 'OK', 202
