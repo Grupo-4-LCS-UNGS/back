@@ -5,26 +5,27 @@ from models.usuario import Usuario
 
 usuarios = Blueprint('usuarios', __name__)
 
-#endpoint de sign in
 @usuarios.route('/signin', methods=['POST'])
 def signin():
-    #capturamos los datos
-    nombre = str(request.form['nombre'])
-    contrasena = str(request.form['contrasena'])
-    rol = str(request.form['rol'])
+    nombre = str(request.form['nombre']).strip()
+    contrasena = str(request.form['contrasena']).strip()
+    rol = str(request.form['rol']).strip()
 
-    #validamos que cumplan con el formato
-    if Valida.nombre(nombre) and Valida.contrasena(contrasena):
-        repetido = Usuario.buscar(nombre)
+    # Validar que el nombre y la contraseña no estén vacíos
+    if not nombre or not contrasena:
+        return jsonify(error='datos inválidos', estado=400), 400
 
-        if repetido is None:
-            encriptado = bcrypt.generate_password_hash(contrasena).decode('utf-8')
-            respuesta = Usuario.agregar(nombre, encriptado, rol)
+    # Verificar si el usuario ya existe
+    repetido = Usuario.buscar(nombre)
+    if repetido is not None:
+        return jsonify(error='usuario ya ingresado', estado=400), 400
 
-            jsonify(id= respuesta, estado= 200)
+    # Crear el usuario
+    encriptado = bcrypt.generate_password_hash(contrasena).decode('utf-8')
+    respuesta = Usuario.agregar(nombre, encriptado, rol)
 
-        else:
-            jsonify(error= 'usuario ya ingresado', estado= 400)
+    return jsonify(id=respuesta, estado=200), 200
+
 
 #endpoint de login
 @usuarios.route('/login', methods=['POST'])
