@@ -1,13 +1,39 @@
 from datetime import datetime
 from flask import Blueprint, jsonify, request, redirect, url_for
-from validaciones import *  # Asegúrate de tener tus validaciones definidas
-from models.gasto import Gasto  # Asegúrate de importar el modelo Gasto
+from validaciones import *  
+from models.gasto import Gasto  
 
 gastos = Blueprint('gastos', __name__)
 
-@gastos.route('/gastos')
+from flask import Blueprint, jsonify, request
+from models.gasto import Gasto
+
+gastos = Blueprint('gastos', __name__)
+
+@gastos.route('/gastos', methods=['GET'])
 def listar_gastos():
-      return Gasto.listar_json()
+    categoria = request.args.get('categoria')
+    fecha = request.args.get('fecha')
+    monto = request.args.get('monto', type=float)
+    proveedor_id = request.args.get('proveedor_id', type=int)
+    descripcion = request.args.get('descripcion')
+
+
+    query = Gasto.query
+    if categoria:
+        query = query.filter_by(categoria=categoria)
+    if fecha:
+        query = query.filter_by(fecha=fecha)
+    if monto:
+        query = query.filter_by(monto=monto)
+    if proveedor_id:
+        query = query.filter_by(proveedor_id=proveedor_id)
+    if descripcion:
+        query = query.filter(Gasto.descripcion.ilike(f"%{descripcion}%"))
+
+    gastos = query.all()
+    return jsonify([gasto.serialize() for gasto in gastos])
+
 
 
 @gastos.route('/gastos/alta', methods=['POST'])
@@ -29,28 +55,11 @@ def cargar_gasto():
         monto=monto,
         proveedor_id=proveedor_id,
         descripcion=descripcion,
-        created_at=datetime.utcnow()  # Establece el valor aquí
+        created_at=datetime.utcnow()  
     )
 
     Gasto.agregar(nuevo_gasto)
     return jsonify({"message": "Gasto registrado exitosamente"}), 201
-
-@gastos.route('/gastos/mod/<int:id>', methods=['PUT'])
-def mod_gasto(id):
-    # Lógica para modificar un gasto por ID
-    gasto = Gasto.encontrar_por_id(id)
-    if not gasto:
-        return jsonify({"error": "Gasto no encontrado"}), 404
-
-    data = request.json
-    gasto.categoria = data.get('categoria', gasto.categoria)
-    gasto.fecha = data.get('fecha', gasto.fecha)
-    gasto.monto = data.get('monto', gasto.monto)
-    gasto.proveedor_id = data.get('proveedor_id', gasto.proveedor_id)
-    gasto.descripcion = data.get('descripcion', gasto.descripcion)
-
-    Gasto.actualizar()  # Asegúrate de que esto funcione como esperas
-    return jsonify({"message": "Gasto actualizado exitosamente"}), 200
 
 @gastos.route('/gastos/baja/<int:id>', methods=['DELETE'])
 def baja_gasto(id):

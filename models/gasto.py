@@ -11,7 +11,7 @@ class Gasto(db.Model):
     monto: Mapped[float] = mapped_column()
     proveedor_id: Mapped[int] = mapped_column(ForeignKey('proveedor.id'), nullable=True)
     descripcion: Mapped[str] = mapped_column(nullable=True)
-    created_at: Mapped[datetime] = mapped_column(default=datetime.utcnow)  # Establece el valor por defecto aquí
+    created_at: Mapped[datetime] = mapped_column(default=datetime.utcnow) 
 
     proveedor: Mapped['Proveedor'] = relationship('Proveedor', backref='gasto')
 
@@ -23,10 +23,10 @@ class Gasto(db.Model):
             'monto': float(self.monto),
             'proveedor': self.proveedor.serialize() if self.proveedor else None,
             'descripcion': self.descripcion,
-            'created_at': self.created_at.isoformat() if self.created_at else None,  # Asegúrate de serializar correctamente
+            'created_at': self.created_at.isoformat() if self.created_at else None,  
         }
 
-    # Otros métodos...
+    
 
 
     @staticmethod
