@@ -2,6 +2,8 @@ from flask import Blueprint, request, session, url_for, jsonify
 from extensiones import db, bcrypt
 from validaciones import *
 from models.usuario import Usuario
+from flask_login import login_user, logout_user, login_required, current_user
+
 
 usuarios = Blueprint('usuarios', __name__)
 
@@ -27,28 +29,25 @@ def signin():
     return jsonify(id=respuesta, estado=200), 200
 
 
-#endpoint de login
 @usuarios.route('/login', methods=['POST'])
-def inicio():
-    #capturamos los datos 
-    nombre = str(request.form['nombre'])
-    contrasena = str(request.form['contrasena'])
+def login():
+    nombre = str(request.form['nombre']).strip()
+    contrasena = str(request.form['contrasena']).strip()
 
-    #validamos que cumplan con el formato
-    if Valida.nombre(nombre) and Valida.contrasena(contrasena):
-        personal = Usuario.buscar(nombre)
+    print(f"Nombre: {nombre}, Contraseña: {contrasena}")  
 
-        verificacion = bcrypt.check_password_hash(personal.contrasena, contrasena)
+    if not (Valida.nombre(nombre) and Valida.contrasena(contrasena)):
+        return jsonify(error='Formato incorrecto', estado=400), 400
 
-        # aca verifica la contraseña, si coincide guarda datos
-        if verificacion:
-            session['user_id'] = personal.id
-            session['rol'] = personal.rol
-            
-            jsonify(id= personal.id, nombre= personal.nombre, rol= personal.rol, estado= 200)
-                    
-        else:
-            jsonify(error= 'contraseña incorrecta', estado= 400)
+    personal = Usuario.buscar(nombre)
+    if not personal or not bcrypt.check_password_hash(personal.contrasena, contrasena):
+        return jsonify(error='Credenciales incorrectas', estado=400), 400
+
+    login_user(personal)
+
+    return jsonify(id=personal.id, nombre=personal.nombre, rol=personal.rol, estado=200), 200
+
+
 
 #endpoint de log out
 @usuarios.route('/logout')

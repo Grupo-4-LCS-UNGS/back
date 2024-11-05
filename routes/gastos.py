@@ -1,7 +1,9 @@
 from datetime import datetime
 from flask import Blueprint, jsonify, request, redirect, url_for
+from flask_login import login_required
 from validaciones import *  
 from models.gasto import Gasto  
+from decoradores import requiere_rol
 
 gastos = Blueprint('gastos', __name__)
 
@@ -11,6 +13,8 @@ from models.gasto import Gasto
 gastos = Blueprint('gastos', __name__)
 
 @gastos.route('/gastos', methods=['GET'])
+@requiere_rol('admin')
+@login_required
 def listar_gastos():
     categoria = request.args.get('categoria')
     fecha = request.args.get('fecha')
