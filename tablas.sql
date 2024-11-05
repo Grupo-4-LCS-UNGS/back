@@ -6,6 +6,8 @@ DROP TABLE IF EXISTS vehiculo;
 DROP TABLE IF EXISTS modelo_vehiculo;
 DROP TABLE IF EXISTS marca_vehiculo;
 DROP TABLE IF EXISTS proveedor;
+DROP TABLE IF EXISTS gasto;
+
 
 CREATE TABLE vehiculo (
 	id serial,
@@ -67,6 +69,17 @@ CREATE TABLE orden_compra (
 	cantidad int,
 	estado text
 );
+
+CREATE TABLE gasto (
+    id SERIAL PRIMARY KEY,
+    categoria VARCHAR(50) NOT NULL, -- (mantenimiento, repuestos, combustible, otros)
+    fecha DATE NOT NULL,
+    monto DECIMAL(10, 2) NOT NULL,
+    proveedor_id VARCHAR(100), -- Puede ser NULL si no aplica
+    descripcion TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 
 ALTER TABLE proveedor ADD CONSTRAINT proveedor_pk PRIMARY KEY (id);
 

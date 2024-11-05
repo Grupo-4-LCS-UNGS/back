@@ -3,6 +3,8 @@ from extensiones import db, bcrypt
 from routes.marcas_vehiculos import marcas_vehiculos
 from routes.ordenes_compra import ordenes_compras
 from routes.proveedores import proveedores
+from routes.gastos import gastos
+
 
 from validaciones import *
 from config import Config
@@ -42,6 +44,8 @@ app.register_blueprint(repuestos)
 app.register_blueprint(marcas_vehiculos)
 app.register_blueprint(proveedores)
 app.register_blueprint(ordenes_compras)
+app.register_blueprint(gastos)
+
 
 if not os.getenv('ENV'):
     os.environ['ENV'] = 'development'
