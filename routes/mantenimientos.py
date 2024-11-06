@@ -42,3 +42,13 @@ def mod_mantenimiento():
 @mantenimientos.route('/mantenimientos/baja')
 def baja_mantenimiento():
     pass
+
+@mantenimientos.route('/mantenimientos/<int:id>')
+def historial_vehiculo(id):
+    resultado = []
+    mantenimientos = Mantenimiento.listar()
+    for mantenimiento in mantenimientos:
+        if mantenimiento.id_vehiculo == id:
+            resultado.append(mantenimiento.serialize())
+
+    return resultado, 200
