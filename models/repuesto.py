@@ -9,7 +9,7 @@ class Repuesto(db.Model):
     id_proveedor:       Mapped[int] = mapped_column(ForeignKey('proveedor.id'))
     id_modelo_vehiculo: Mapped[int] = mapped_column(ForeignKey('modelo_vehiculo.id'))
     nombre:             Mapped[str]
-    stock:              Mapped[str]
+    stock:              Mapped[int] #cambie el tipo de dato ya que no guardaba el dato indicado
     umbral_minimo:      Mapped[int]
     umbral_maximo:      Mapped[int]
     proveedor:          Mapped['Proveedor'] = relationship('Proveedor', backref='repuestos')

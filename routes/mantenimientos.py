@@ -4,6 +4,8 @@ from validaciones import *
 
 from models.vehiculo import Vehiculo
 from models.mantenimiento import Mantenimiento
+from models.repuesto import Repuesto
+from models.asignacion_repuestos import AsignacionRepuestos
 
 mantenimientos = Blueprint('mantenimientos', __name__)
 
@@ -12,6 +14,10 @@ def listar_mantenimientos():
     mantenimientos = Mantenimiento.listar_json()
     return jsonify(mantenimientos)
 
+#el endpoint recibe los datos del mantenimiento y los id de los repuestos junto a su cantidad,
+#debe verificar que la cantidad no exceda y que el vehiculo este en la flota,
+#si pasa la verificacion debe generar el registro del mantenimiento,
+#el registro de repuestos y el registro de asignacion de repuestos
 @mantenimientos.route('/mantenimientos/alta')
 def cargar_mantenimiento():
 
@@ -21,8 +27,13 @@ def cargar_mantenimiento():
     fin = str(request.form['fin'])
     descripcion = str(request.form['descripcion'])
 
-    vehiculo = Vehiculo.encontrarPorPatente(matricula)
+    #supongo que en el form se carga una lista de los repuestos con su id y su cantidad, cada uno como dict
+    repuestos = request.form['repuestos']
 
+    vehiculo = Vehiculo.encontrarPorPatente(matricula)
+    mantenimiento = None
+
+    #agrego la entrada del mantenimiento si es parte de la flota
     if vehiculo is not None:
         mantenimiento = Mantenimiento(
             id_vehiculo= vehiculo.id,
@@ -32,6 +43,17 @@ def cargar_mantenimiento():
             descripcion= descripcion
         )
         Mantenimiento.agregar(mantenimiento)
+
+    #me fijo si el mantenimiento se cargo con exito para impactar en la asignacion de repuestos
+    if mantenimiento.id is not None:
+        for repuesto in repuestos:
+            producto = Repuesto.encontrarPorId(repuesto['id'])
+            asignacion = AsignacionRepuestos(mantenimiento, producto, stock= repuesto['cantidad'])
+            AsignacionRepuestos.agregar(asignacion)
+
+            #aca debe actualizar el stock
+            producto.stock -= repuesto['cantidad']
+            Repuesto.actualizar()
 
     redirect(url_for('listar_mantenimientos'))
 
