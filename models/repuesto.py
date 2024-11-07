@@ -12,7 +12,7 @@ class Repuesto(db.Model):
     stock:              Mapped[str]
     umbral_minimo:      Mapped[int]
     umbral_maximo:      Mapped[int]
-    proveedor:          Mapped['Proveedor'] = relationship('Proveedor', backref='proveedor')
+    proveedor:          Mapped['Proveedor'] = relationship('Proveedor', backref='repuestos')
     modelo_vehiculo:    Mapped['ModeloVehiculo'] = relationship('ModeloVehiculo', backref='repuestos')
 
     def serialize(self):

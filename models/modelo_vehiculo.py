@@ -12,6 +12,6 @@ class ModeloVehiculo(db.Model):
     def serialize(self):
         return {
             'id': self.id,
-            'marca_vehiculo': self.marca.serialize(),
+            'marca_vehiculo': self.marca.serialize() if self.marca else None,
             'nombre': self.nombre
         }

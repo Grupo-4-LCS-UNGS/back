@@ -12,12 +12,12 @@ class Mantenimiento(db.Model):
     estado:       Mapped[str]
     descripcion:  Mapped[str]
     tipo:         Mapped[str]
-    vehiculo:     Mapped['Vehiculo'] = relationship('Vehiculo', backref='mantenimiento')
+    vehiculo:     Mapped['Vehiculo'] = relationship('Vehiculo', backref='mantenimientos')
 
     def serialize(self):
         return {
             'id': self.id,
-            'vehiculo': self.vehiculo.serialize(),
+            'vehiculo': self.vehiculo.serialize() if self.vehiculo else None,
             'fecha_inicio': self.fecha_inicio,
             'fecha_fin': self.fecha_fin,
             'estado': self.estado,

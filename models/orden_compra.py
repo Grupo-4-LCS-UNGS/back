@@ -9,7 +9,7 @@ class OrdenCompra(db.Model):
     id_repuesto: Mapped[int] = mapped_column(ForeignKey('repuesto.id'))
     cantidad:    Mapped[int]
     estado:      Mapped[str]
-    repuesto:    Mapped['Repuesto'] = relationship('Repuesto', backref='repuesto')
+    repuesto:    Mapped['Repuesto'] = relationship('Repuesto', backref='ordenes_compra')
 
     def serialize(self):
         return {
