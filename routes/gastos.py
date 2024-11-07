@@ -4,24 +4,19 @@ from flask_login import login_required
 from validaciones import *  
 from models.gasto import Gasto  
 from decoradores import requiere_rol
-
-gastos = Blueprint('gastos', __name__)
-
-from flask import Blueprint, jsonify, request
-from models.gasto import Gasto
+from flask_jwt_extended import jwt_required, get_jwt
 
 gastos = Blueprint('gastos', __name__)
 
 @gastos.route('/gastos', methods=['GET'])
-@requiere_rol('admin')
-@login_required
+@jwt_required()  # Protege la ruta con JWT
+@requiere_rol('admin')  # Mantiene la verificación del rol como está
 def listar_gastos():
     categoria = request.args.get('categoria')
     fecha = request.args.get('fecha')
     monto = request.args.get('monto', type=float)
     proveedor_id = request.args.get('proveedor_id', type=int)
     descripcion = request.args.get('descripcion')
-
 
     query = Gasto.query
     if categoria:
@@ -37,6 +32,7 @@ def listar_gastos():
 
     gastos = query.all()
     return jsonify([gasto.serialize() for gasto in gastos])
+
 
 
 

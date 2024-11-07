@@ -1,14 +1,15 @@
-# decoradores.py
 from functools import wraps
-from flask import request, jsonify
-from flask_login import current_user
+from flask_jwt_extended import get_jwt
+from flask import jsonify
 
 def requiere_rol(rol_requerido):
-    def decorator(func):
-        @wraps(func)
-        def wrapped(*args, **kwargs):
-            if current_user.is_authenticated and current_user.rol == rol_requerido:
-                return func(*args, **kwargs)
-            return jsonify(error='Acceso no autorizado', estado=403), 403
-        return wrapped
+    def decorator(f):
+        @wraps(f)
+        def wrapper(*args, **kwargs):
+            claims = get_jwt()
+            rol = claims.get("rol")  # El rol debería estar en el token
+            if rol != rol_requerido:
+                return jsonify(error="No tienes permisos para acceder a este recurso"), 403
+            return f(*args, **kwargs)
+        return wrapper
     return decorator

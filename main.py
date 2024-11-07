@@ -16,12 +16,16 @@ from routes.repuestos import repuestos
 from dotenv import load_dotenv
 import os
 from colorama import Fore, Back, Style
+from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
+
 
 app = Flask(__name__)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = Config.FULL_URL_DB
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = Config.SECRET_KEY
+jwt = JWTManager(app)
+
 
 db.init_app(app)
 
