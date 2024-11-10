@@ -56,7 +56,7 @@ def crearTriggers():
     base = abrir_conexion(Config.DB)
     cur = base.cursor()
 
-    with open('trigger_orden_compra.sql', 'r') as file:
+    with open('triggers.sql', 'r') as file:
         sql = file.read()
     try:
         cur.execute(sql)
