@@ -1,8 +1,10 @@
 from flask import Flask
 from flask_login import LoginManager 
 from extensiones import db, bcrypt
+from routes.asig_operador_vehiculo import asig_operador_vehiculo
 from routes.asignaciones_repuestos import asignaciones_repuestos
 from routes.marcas_vehiculos import marcas_vehiculos
+from routes.modelos_vehiculos import modelos_vehiculos
 from routes.ordenes_compra import ordenes_compras
 from routes.proveedores import proveedores
 from routes.gastos import gastos
@@ -51,6 +53,8 @@ app.register_blueprint(proveedores)
 app.register_blueprint(ordenes_compras)
 app.register_blueprint(gastos)
 app.register_blueprint(asignaciones_repuestos)
+app.register_blueprint(asig_operador_vehiculo)
+app.register_blueprint(modelos_vehiculos)
 
 if not os.getenv('ENV'):
     os.environ['ENV'] = 'development'

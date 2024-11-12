@@ -3,7 +3,7 @@ from extensiones import db
 
 class MarcaVehiculo(db.Model):
     id:     Mapped[int] = mapped_column(primary_key=True)
-    nombre: Mapped[str]
+    nombre: Mapped[str] = mapped_column(unique=True, nullable=False)
     logo:   Mapped[str]
 
     def serialize(self):

@@ -2,20 +2,24 @@ from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, relationship, mapped_column
 from extensiones import db
 from models.modelo_vehiculo import ModeloVehiculo
+from models.usuario import Usuario
 
 
 class Vehiculo(db.Model):
     id:         Mapped[int] = mapped_column(primary_key=True)
     id_modelo:  Mapped[int] = mapped_column(ForeignKey('modelo_vehiculo.id'))
-    matricula:  Mapped[str]
+    id_operador:Mapped[int] = mapped_column(ForeignKey('usuario.id'))
+    matricula:  Mapped[str] = mapped_column(unique=True, nullable=False)
     id_traccar: Mapped[int]
     estado:     Mapped[str]
     modelo:     Mapped['ModeloVehiculo'] = relationship('ModeloVehiculo', backref='vehiculos')
+    operador:   Mapped['Usuario'] = relationship('Usuario', backref='vehiculo')
 
     def serialize(self):
         return {
             'id': self.id,
             'modelo': self.modelo.serialize() if self.modelo else None,
+            'operador': self.operador if self.operador else None,
             'matricula': self.matricula,
             'id_traccar': self.id_traccar,
             'estado': self.estado

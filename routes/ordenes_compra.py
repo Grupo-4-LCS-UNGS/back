@@ -8,6 +8,12 @@ ordenes_compras = Blueprint('ordenes_compras', __name__)
 def listar_ordenes():
     return OrdenCompra.listar_json()
 
+@ordenes_compras.route('/ordenes_compras/', methods=['POST'])
+def alta_orden():
+    data = request.get_json()
+    OrdenCompra.agregar(OrdenCompra(**data))
+    return 'OK', 202
+
 @ordenes_compras.route('/ordenes_compras/<int:id>', methods=['PUT'])
 def actualizar_orden(id):
     orden_compra = OrdenCompra.encontrarPorId(id)

@@ -3,7 +3,7 @@ name: Deploy main en Potus WS
 on:
   push:
     branches:
-      - G4L-260-Integracion-login
+      - main
 
 jobs:
   build:
