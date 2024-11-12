@@ -9,7 +9,7 @@ class Vehiculo(db.Model):
     id:         Mapped[int] = mapped_column(primary_key=True)
     id_modelo:  Mapped[int] = mapped_column(ForeignKey('modelo_vehiculo.id'))
     id_operador:Mapped[int] = mapped_column(ForeignKey('usuario.id'))
-    matricula:  Mapped[str]
+    matricula:  Mapped[str] = mapped_column(unique=True, nullable=False)
     id_traccar: Mapped[int]
     estado:     Mapped[str]
     modelo:     Mapped['ModeloVehiculo'] = relationship('ModeloVehiculo', backref='vehiculos')

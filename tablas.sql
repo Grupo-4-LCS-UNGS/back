@@ -9,6 +9,7 @@ DROP TABLE IF EXISTS marca_vehiculo;
 DROP TABLE IF EXISTS proveedor;
 DROP TABLE IF EXISTS gasto;
 DROP TABLE IF EXISTS usuario;
+DROP TABLE IF EXISTS cliente;
 
 CREATE TABLE vehiculo (
 	id serial,
@@ -66,7 +67,7 @@ CREATE TABLE proveedor (
 	direccion text,
 	telefono text,
 	email text,
-	cuit text
+	cuit text UNIQUE NOT NULL
 );
 
 CREATE TABLE orden_compra (
@@ -91,6 +92,15 @@ CREATE TABLE bitacora_asig_operador (
 	tipo text
 );
 
+CREATE TABLE cliente (
+	id serial,
+	cuit int UNIQUE NOT NULL,
+	nombre text,
+	direccion text,
+	email text,
+	telefono text
+);
+
 CREATE TABLE gasto (
     id SERIAL PRIMARY KEY,
     categoria VARCHAR(50) NOT NULL, -- (mantenimiento, repuestos, combustible, otros)
@@ -100,6 +110,8 @@ CREATE TABLE gasto (
     descripcion TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+ALTER TABLE cliente ADD CONSTRAINT cliente_pk PRIMARY KEY (id);
 
 ALTER TABLE usuario ADD CONSTRAINT usuario_pk PRIMARY KEY (id);
 
