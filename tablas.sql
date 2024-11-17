@@ -30,6 +30,7 @@ CREATE TABLE modelo_vehiculo(
 	id serial,
 	id_marca_vehiculo int,
 	nombre text UNIQUE NOT NULL
+	litrosx100km DOUBLE PRECISION,
 );
 
 CREATE TABLE mantenimiento (
