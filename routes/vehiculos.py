@@ -25,6 +25,10 @@ def cargar_vehiculo():
     patente = str(request.form['patente'])
 
     vehiculo = Vehiculo(marca, modelo, patente, anio)
+    
+    # receive a file call documentacion an save it in the server
+    file = request.files['documentacion']
+    file.save(os.path.join("/documentacion_autos", vehiculo.id + ".pdf"))
 
     #deberia hacer verificaciones, al menos sobre patente repetida
     if Valida.patente(patente):
@@ -55,6 +59,9 @@ def mod_vehiculo():
     coincidencia.modelo = modelo
     coincidencia.matricula = patente
     coincidencia.anio = anio
+    
+
+    
     
     Vehiculo.actualizar()
 
