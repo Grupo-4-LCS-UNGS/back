@@ -8,12 +8,14 @@ class ModeloVehiculo(db.Model):
     id_marca_vehiculo:  Mapped[int] = mapped_column(ForeignKey('marca_vehiculo.id'))
     nombre:             Mapped[str] = mapped_column(unique=True, nullable=False)
     marca:              Mapped['MarcaVehiculo'] = relationship('MarcaVehiculo', backref='modelos')
+    litrosx100km:       Mapped[float]
 
     def serialize(self):
         return {
             'id': self.id,
             'marca_vehiculo': self.marca.serialize() if self.marca else None,
-            'nombre': self.nombre
+            'nombre': self.nombre,
+            'litrosx100km': self.litrosx100km
         }
 
     @staticmethod
