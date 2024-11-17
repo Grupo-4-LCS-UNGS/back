@@ -25,6 +25,8 @@ def cargar_vehiculo():
     patente = str(request.form['patente'])
 
     vehiculo = Vehiculo(marca, modelo, patente, anio)
+    
+
 
     #deberia hacer verificaciones, al menos sobre patente repetida
     if Valida.patente(patente):
@@ -55,6 +57,9 @@ def mod_vehiculo():
     coincidencia.modelo = modelo
     coincidencia.matricula = patente
     coincidencia.anio = anio
+    
+
+    
     
     Vehiculo.actualizar()
 
