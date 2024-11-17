@@ -20,6 +20,7 @@ def actualizar_orden(id):
     if orden_compra == None:
         return 'Orden de compra no encontrada', 404
     data = request.get_json()
+    orden_compra.id_proveedor = data.get('id_proveedor')
     orden_compra.estado = data.get('estado', orden_compra.estado)
     OrdenCompra.actualizar()
     return 'OK', 202

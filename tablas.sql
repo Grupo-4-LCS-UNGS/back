@@ -1,3 +1,5 @@
+DROP TABLE IF EXISTS orden_compra;
+DROP TABLE IF EXISTS proveedor_repuesto;
 DROP TABLE IF EXISTS bitacora_asig_operador;
 DROP TABLE IF EXISTS asignacion_repuestos;
 DROP TABLE IF EXISTS orden_compra;
@@ -44,13 +46,11 @@ CREATE TABLE mantenimiento (
 
 CREATE TABLE repuesto (
 	id serial,
-	id_proveedor int,
 	id_modelo_vehiculo int,
 	nombre text,
 	stock int,
 	umbral_minimo int,
-	umbral_maximo int,
-	costo DOUBLE PRECISION
+	umbral_maximo int
 );
 
 CREATE TABLE asignacion_repuestos (
@@ -70,9 +70,16 @@ CREATE TABLE proveedor (
 	cuit text UNIQUE NOT NULL
 );
 
+CREATE TABLE proveedor_repuesto (
+	id_proveedor int,
+	id_repuesto int,
+	costo DOUBLE PRECISION
+);
+
 CREATE TABLE orden_compra (
 	id serial,
 	id_repuesto int,
+	id_proveedor int,
 	cantidad int,
 	estado text
 );
@@ -130,7 +137,6 @@ ALTER TABLE mantenimiento ADD CONSTRAINT mantenimiento_pk PRIMARY KEY (id);
 ALTER TABLE mantenimiento ADD CONSTRAINT mantenimiento_id_vehiculo_fk FOREIGN KEY (id_vehiculo) REFERENCES vehiculo(id);
 
 ALTER TABLE repuesto ADD CONSTRAINT repuesto_pk PRIMARY KEY (id);
-ALTER TABLE repuesto ADD CONSTRAINT repuesto_id_proveedor_fk FOREIGN KEY (id_proveedor) REFERENCES proveedor(id);
 ALTER TABLE repuesto ADD CONSTRAINT repuesto_id_modelo_vehiculo_fk FOREIGN KEY (id_modelo_vehiculo) REFERENCES modelo_vehiculo(id);
 
 ALTER TABLE asignacion_repuestos ADD CONSTRAINT asignacion_repuestos_pk PRIMARY KEY (id);
@@ -139,7 +145,12 @@ ALTER TABLE asignacion_repuestos ADD CONSTRAINT asignacion_repuestos_id_repuesto
 
 ALTER TABLE orden_compra ADD CONSTRAINT orden_compra_pk PRIMARY KEY (id);
 ALTER TABLE orden_compra ADD CONSTRAINT orden_compra_id_repuesto_fk FOREIGN KEY (id_repuesto) REFERENCES repuesto(id);
+ALTER TABLE orden_compra ADD CONSTRAINT orden_compra_id_proveedor_fk FOREIGN KEY (id_proveedor) REFERENCES proveedor(id);
 
 ALTER TABLE bitacora_asig_operador ADD CONSTRAINT bitacora_asig_operador_pk PRIMARY KEY (id);
 ALTER TABLE bitacora_asig_operador ADD CONSTRAINT bitacora_asig_operador_id_operador_fk FOREIGN KEY (id_operador) REFERENCES usuario(id);
 ALTER TABLE bitacora_asig_operador ADD CONSTRAINT bitacora_asig_operador_id_vehiculo_fk FOREIGN KEY (id_vehiculo) REFERENCES vehiculo(id);
+
+ALTER TABLE proveedor_repuesto ADD CONSTRAINT proveedor_repuesto_pk PRIMARY KEY (id_proveedor, id_repuesto);
+ALTER TABLE proveedor_repuesto ADD CONSTRAINT proveedor_repuesto_id_proveedor_fk FOREIGN KEY (id_proveedor) REFERENCES proveedor(id);
+ALTER TABLE proveedor_repuesto ADD CONSTRAINT proveedor_repuesto_id_repuesto_fk FOREIGN KEY (id_repuesto) REFERENCES repuesto(id);

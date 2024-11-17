@@ -8,6 +8,7 @@ from routes.modelos_vehiculos import modelos_vehiculos
 from routes.ordenes_compra import ordenes_compras
 from routes.proveedores import proveedores
 from routes.gastos import gastos
+from routes.proveedores_repuesto import proveedores_repuesto
 from routes.usuarios import Usuario
 from validaciones import *
 from config import Config
@@ -55,6 +56,7 @@ app.register_blueprint(gastos)
 app.register_blueprint(asignaciones_repuestos)
 app.register_blueprint(asig_operador_vehiculo)
 app.register_blueprint(modelos_vehiculos)
+app.register_blueprint(proveedores_repuesto)
 
 if not os.getenv('ENV'):
     os.environ['ENV'] = 'development'
