@@ -26,9 +26,7 @@ def cargar_vehiculo():
 
     vehiculo = Vehiculo(marca, modelo, patente, anio)
     
-    # receive a file call documentacion an save it in the server
-  """   file = request.files['documentacion']
-    file.save(os.path.join("/documentacion_autos", vehiculo.id + ".pdf")) """
+
 
     #deberia hacer verificaciones, al menos sobre patente repetida
     if Valida.patente(patente):
