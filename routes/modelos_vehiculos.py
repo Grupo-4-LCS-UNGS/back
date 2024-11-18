@@ -12,7 +12,7 @@ def listar_modelos():
 def alta_modelo():
     data = request.get_json()
     ModeloVehiculo.agregar(ModeloVehiculo(**data))
-    return ModeloVehiculo.listar_json()
+    return 'OK', 202
 
 @modelos_vehiculos.route('/modelos_vehiculos/<int:id>', methods=['PUT'])
 def actualizar_marca(id):
@@ -23,5 +23,6 @@ def actualizar_marca(id):
     data = request.get_json()
     modelo.id_marca_vehiculo = data.get('id_marca_vehiculo')
     modelo.nombre = data.get('nombre', modelo.nombre)
+    modelo.litrosx100km = data.get('litrosx100km', modelo.litrosx100km)
     ModeloVehiculo.actualizar()
-    return ModeloVehiculo.listar_json()
+    return 'OK', 202
