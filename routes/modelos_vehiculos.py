@@ -1,4 +1,4 @@
-from flask import Blueprint, request
+from flask import Blueprint, request, jsonify
 
 from models.modelo_vehiculo import ModeloVehiculo
 
@@ -25,3 +25,10 @@ def actualizar_marca(id):
     modelo.nombre = data.get('nombre', modelo.nombre)
     ModeloVehiculo.actualizar()
     return ModeloVehiculo.listar_json()
+
+@modelos_vehiculos.route('/modelos_vehiculos/marca/<int:id_marca>', methods=['GET'])
+def obtener_modelos_por_marca(id_marca):
+    modelos = ModeloVehiculo.obtenerPorMarca(id_marca)
+    if not modelos:
+        return 'No se encontraron modelos para esta marca', 404
+    return jsonify([modelo.serialize() for modelo in modelos])

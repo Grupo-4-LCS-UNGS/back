@@ -23,6 +23,10 @@ class ModeloVehiculo(db.Model):
         return ModeloVehiculo.query.all()
 
     @staticmethod
+    def obtenerPorMarca(id_marca):
+        return ModeloVehiculo.query.filter_by(id_marca_vehiculo=id_marca).all()
+
+    @staticmethod
     def listar_json():
         return [modelo_vehiculo.serialize() for modelo_vehiculo in ModeloVehiculo.listar()]
 
