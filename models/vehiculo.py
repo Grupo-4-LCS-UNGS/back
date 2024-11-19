@@ -16,6 +16,7 @@ class Vehiculo(db.Model):
     modelo:     Mapped['ModeloVehiculo'] = relationship('ModeloVehiculo', backref='vehiculos')
     operador:   Mapped['Usuario'] = relationship('Usuario', backref='vehiculo')
     cliente:    Mapped['Cliente'] = relationship('Cliente', backref='vehiculo_asignado')
+    kilometraje:Mapped[int]
 
     def serialize(self):
         return {

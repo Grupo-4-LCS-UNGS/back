@@ -3,6 +3,8 @@ from flask import Blueprint, jsonify, request, render_template, flash, redirect,
 from validaciones import *
 
 from models.vehiculo import Vehiculo
+from models.modelo_vehiculo import ModeloVehiculo
+from models.marca_vehiculo import MarcaVehiculo
 
 vehiculos = Blueprint('vehiculos', __name__)
 
@@ -19,12 +21,18 @@ def cargar_vehiculo():
         return render_template('altaVehiculo.html')
     
     #capturamos los datos
-    marca = str(request.form['marca'])
-    modelo = str(request.form['modelo'])
-    anio = int(request.form['anio'])
+    marca = int(request.form['marca'])
+    modelo = int(request.form['modelo'])
+#    anio = int(request.form['anio']) DEPRECADO
     patente = str(request.form['patente'])
 
-    vehiculo = Vehiculo(marca, modelo, patente, anio)
+    marcaEncontrada = MarcaVehiculo.encontrarPorId(marca)
+    modeloEncontrado = ModeloVehiculo.encontrarPorId(modelo)
+    vehiculo = None
+
+    if marcaEncontrada and modeloEncontrado:
+        vehiculo = Vehiculo(id_modelo= modeloEncontrado, 
+                            matricula= patente)
     
 
 
