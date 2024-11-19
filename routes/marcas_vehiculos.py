@@ -8,7 +8,7 @@ marcas_vehiculos = Blueprint('marcas_vehiculos', __name__)
 def listar_marcas():
     return MarcaVehiculo.listar_json()
 
-@marcas_vehiculos.route('/marcas_vehiculos/', methods=['POST'])
+@marcas_vehiculos.route('/marcas_vehiculos/alta', methods=['POST'])
 def alta_marca():
     data = request.get_json()
     MarcaVehiculo.agregar(MarcaVehiculo(**data))
