@@ -4,7 +4,7 @@ from extensiones import db
 class MarcaVehiculo(db.Model):
     id:     Mapped[int] = mapped_column(primary_key=True)
     nombre: Mapped[str] = mapped_column(unique=True, nullable=False)
-    logo:   Mapped[str]
+    logo:   Mapped[str] = mapped_column(nullable=True)
 
     def serialize(self):
         return {

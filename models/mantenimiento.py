@@ -7,11 +7,11 @@ from models.vehiculo import Vehiculo
 class Mantenimiento(db.Model):
     id:           Mapped[int] = mapped_column(primary_key=True)
     id_vehiculo:  Mapped[int] = mapped_column(ForeignKey('vehiculo.id'))
-    fecha_inicio: Mapped[datetime.date] = mapped_column(Date)
-    fecha_fin:    Mapped[datetime.date] = mapped_column(Date)
-    estado:       Mapped[str]
-    descripcion:  Mapped[str]
-    tipo:         Mapped[str]
+    fecha_inicio: Mapped[datetime.date] = mapped_column(Date, nullable=True)
+    fecha_fin:    Mapped[datetime.date] = mapped_column(Date, nullable=True)
+    estado:       Mapped[str] = mapped_column(nullable=True)
+    descripcion:  Mapped[str] = mapped_column(nullable=True)
+    tipo:         Mapped[str] = mapped_column(nullable=True)
     vehiculo:     Mapped['Vehiculo'] = relationship('Vehiculo', backref='mantenimientos')
 
     def serialize(self):

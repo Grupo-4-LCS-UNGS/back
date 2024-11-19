@@ -6,6 +6,7 @@ class Proveedor(db.Model):
     nombre:     Mapped[str]
     direccion:  Mapped[str]
     telefono:   Mapped[str]
+    email:      Mapped[str]
     cuit:       Mapped[str] = mapped_column(unique=True, nullable=False)
 
     def serialize(self):

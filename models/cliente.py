@@ -1,13 +1,15 @@
+from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column
 from extensiones import db
 
 class Cliente(db.Model):
     id:         Mapped[int] = mapped_column(primary_key=True)
-    cuit:       Mapped[int] = mapped_column(unique=True, nullable=False)
-    nombre:     Mapped[str]
-    direccion:  Mapped[str]
-    email:      Mapped[str]
-    telefono:   Mapped[str]
+    id_operador:Mapped[int] = mapped_column(ForeignKey('usuario.id'), nullable=True)
+    cuit:       Mapped[int] = mapped_column(unique=True)
+    nombre:     Mapped[str] = mapped_column(nullable=True)
+    direccion:  Mapped[str] = mapped_column(nullable=True)
+    email:      Mapped[str] = mapped_column(nullable=True)
+    telefono:   Mapped[str] = mapped_column(nullable=True)
 
     def serialize(self):
         return {
