@@ -11,7 +11,6 @@ BEGIN
 	RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
-
 CREATE OR REPLACE TRIGGER generarOrdenCompra_trg
 BEFORE UPDATE ON repuesto
 FOR EACH ROW
@@ -22,6 +21,9 @@ DECLARE
 	tipo text;
 	id_op_aux int;
 BEGIN
+	IF NEW.id_operador = OLD.id_operador THEN
+		RETURN NEW;
+	END IF;
 	IF NEW.id_operador IS NULL THEN
 		tipo := 'DESASIGNACION';
 		id_op_aux := OLD.id_operador;
@@ -34,8 +36,27 @@ BEGIN
 	RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
-
 CREATE OR REPLACE TRIGGER actualizar_bitacora_operador_trg
 AFTER UPDATE ON vehiculo
 FOR EACH ROW
 EXECUTE FUNCTION actualizar_bitacora_operador();
+
+CREATE OR REPLACE FUNCTION actualizar_bitacora_cliente() RETURNS TRIGGER AS $$
+DECLARE
+BEGIN
+	IF NEW.id_cliente IS NOT NULL THEN
+		INSERT INTO bitacora_asig_cliente
+		(id_operador, id_cliente, id_vehiculo, fecha, tipo)
+		VALUES (NEW.id_operador, NEW.id_cliente, NEW.id, NOW(), 'ASIGNACION');
+	ELSIF OLD.id_cliente IS NOT NULL THEN
+		INSERT INTO bitacora_asig_cliente
+		(id_operador, id_cliente, id_vehiculo, fecha, tipo)
+		VALUES (NEW.id_operador, OLD.id_cliente, NEW.id, NOW(), 'DESASIGNACION');
+	END IF;
+	RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+CREATE OR REPLACE TRIGGER actualizar_bitacora_cliente_trg
+AFTER UPDATE ON vehiculo
+FOR EACH ROW
+EXECUTE FUNCTION actualizar_bitacora_cliente();

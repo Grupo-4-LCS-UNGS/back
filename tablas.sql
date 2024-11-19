@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS bitacora_asig_cliente;
 DROP TABLE IF EXISTS orden_compra;
 DROP TABLE IF EXISTS proveedor_repuesto;
 DROP TABLE IF EXISTS bitacora_asig_operador;
@@ -17,6 +18,7 @@ CREATE TABLE vehiculo (
 	id serial,
 	id_modelo int,
 	id_operador int,
+	id_cliente int,
 	matricula text UNIQUE NOT NULL,
 	id_traccar int,
 	estado text
@@ -102,7 +104,7 @@ CREATE TABLE bitacora_asig_operador (
 
 CREATE TABLE cliente (
 	id serial,
-	cuit int UNIQUE NOT NULL,
+	cuit text UNIQUE NOT NULL,
 	nombre text,
 	direccion text,
 	email text,
@@ -117,6 +119,15 @@ CREATE TABLE gasto (
     proveedor_id VARCHAR(100), -- Puede ser NULL si no aplica
     descripcion TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE bitacora_asig_cliente (
+    id serial,
+    id_operador int,
+	id_cliente int,
+	id_vehiculo int,
+    fecha TIMESTAMP,
+	tipo text
 );
 
 ALTER TABLE cliente ADD CONSTRAINT cliente_pk PRIMARY KEY (id);
@@ -155,3 +166,8 @@ ALTER TABLE bitacora_asig_operador ADD CONSTRAINT bitacora_asig_operador_id_vehi
 ALTER TABLE proveedor_repuesto ADD CONSTRAINT proveedor_repuesto_pk PRIMARY KEY (id_proveedor, id_repuesto);
 ALTER TABLE proveedor_repuesto ADD CONSTRAINT proveedor_repuesto_id_proveedor_fk FOREIGN KEY (id_proveedor) REFERENCES proveedor(id);
 ALTER TABLE proveedor_repuesto ADD CONSTRAINT proveedor_repuesto_id_repuesto_fk FOREIGN KEY (id_repuesto) REFERENCES repuesto(id);
+
+ALTER TABLE bitacora_asig_cliente ADD CONSTRAINT bitacora_asig_cliente_pk PRIMARY KEY (id);
+ALTER TABLE bitacora_asig_cliente ADD CONSTRAINT bitacora_asig_cliente_id_operador_fk FOREIGN KEY (id_operador) REFERENCES usuario(id);
+ALTER TABLE bitacora_asig_cliente ADD CONSTRAINT bitacora_asig_cliente_id_cliente_fk FOREIGN KEY (id_cliente) REFERENCES cliente(id);
+ALTER TABLE bitacora_asig_cliente ADD CONSTRAINT bitacora_asig_cliente_id_vehiculo_fk FOREIGN KEY (id_vehiculo) REFERENCES vehiculo(id);
