@@ -24,8 +24,7 @@ def cargar_vehiculo():
     
     patente = str(request.form['patente'])
 
-    vehiculo = Vehiculo(marca, modelo, patente)
-    
+    vehiculo = Vehiculo(marca=marca, modelo=modelo, matricula=patente)
 
 
     #deberia hacer verificaciones, al menos sobre patente repetida
