@@ -4,7 +4,7 @@ from models.marca_vehiculo import MarcaVehiculo
 
 marcas_vehiculos = Blueprint('marcas_vehiculos', __name__)
 
-@marcas_vehiculos.route('/marcas_vehiculos/')
+@marcas_vehiculos.route('/marcas_vehiculos/', methods=['GET'])
 def listar_marcas():
     return MarcaVehiculo.listar_json()
 
