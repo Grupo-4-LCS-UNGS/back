@@ -19,12 +19,12 @@ def cargar_vehiculo():
         return render_template('altaVehiculo.html')
     
     #capturamos los datos
-    marca = str(request.form['marca'])
+    
     modelo = str(request.form['modelo'])
     
     patente = str(request.form['patente'])
 
-    vehiculo = Vehiculo(marca=marca, modelo=modelo, matricula=patente)
+    vehiculo = Vehiculo(modelo=modelo, matricula=patente)
 
 
     #deberia hacer verificaciones, al menos sobre patente repetida
@@ -43,7 +43,7 @@ def cargar_vehiculo():
 @vehiculos.route('/vehiculos/mod', methods=['PUT'])
 def mod_vehiculo():
     #capturo los datos
-    marca = str(request.form['marca'])
+   
     modelo = str(request.form['modelo'])
    
     patente = str(request.form['patente'])
@@ -52,7 +52,7 @@ def mod_vehiculo():
     coincidencia = Vehiculo.encontrarPorPatente(patente)
 
     #actualizo y guardo cambios
-    coincidencia.marca = marca
+   
     coincidencia.modelo = modelo
     coincidencia.matricula = patente
     coincidencia.anio = anio
