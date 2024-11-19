@@ -21,10 +21,10 @@ def cargar_vehiculo():
     #capturamos los datos
     marca = str(request.form['marca'])
     modelo = str(request.form['modelo'])
-    anio = int(request.form['anio'])
+    
     patente = str(request.form['patente'])
 
-    vehiculo = Vehiculo(marca, modelo, patente, anio)
+    vehiculo = Vehiculo(marca, modelo, patente)
     
 
 
@@ -46,7 +46,7 @@ def mod_vehiculo():
     #capturo los datos
     marca = str(request.form['marca'])
     modelo = str(request.form['modelo'])
-    anio = int(request.form['anio'])
+   
     patente = str(request.form['patente'])
 
     #encuentro la entrada a modificar
