@@ -8,7 +8,7 @@ from models.repuesto import Repuesto
 
 class AsignacionRepuestos(db.Model):
     id:               Mapped[int] = mapped_column(primary_key=True)
-    id_mantenimiento: Mapped[int] = mapped_column(ForeignKey('mantenimiento.id'))
+    id_mantenimiento: Mapped[int] = mapped_column(ForeignKey('mantenimiento.id'), nullable=True)
     id_repuesto:      Mapped[int] = mapped_column(ForeignKey('repuesto.id'))
     cantidad:         Mapped[int]
     fecha:            Mapped[datetime.date] = mapped_column(Date, default=func.now())

@@ -18,7 +18,6 @@ CREATE TABLE vehiculo (
 	id serial,
 	id_modelo int,
 	id_operador int,
-	id_cliente int,
 	matricula text UNIQUE NOT NULL,
 	id_traccar int,
 	estado text
@@ -104,6 +103,7 @@ CREATE TABLE bitacora_asig_operador (
 
 CREATE TABLE cliente (
 	id serial,
+	id_operador int,
 	cuit text UNIQUE NOT NULL,
 	nombre text,
 	direccion text,
@@ -130,9 +130,10 @@ CREATE TABLE bitacora_asig_cliente (
 	tipo text
 );
 
-ALTER TABLE cliente ADD CONSTRAINT cliente_pk PRIMARY KEY (id);
-
 ALTER TABLE usuario ADD CONSTRAINT usuario_pk PRIMARY KEY (id);
+
+ALTER TABLE cliente ADD CONSTRAINT cliente_pk PRIMARY KEY (id);
+ALTER TABLE cliente ADD CONSTRAINT cliente_id_operador_fk FOREIGN KEY (id_operador) REFERENCES usuario(id);
 
 ALTER TABLE proveedor ADD CONSTRAINT proveedor_pk PRIMARY KEY (id);
 

@@ -8,7 +8,7 @@ from models.repuesto import Repuesto
 class OrdenCompra(db.Model):
     id:           Mapped[int] = mapped_column(primary_key=True)
     id_repuesto:  Mapped[int] = mapped_column(ForeignKey('repuesto.id'))
-    id_proveedor: Mapped[int] = mapped_column(ForeignKey('proveedor.id'))
+    id_proveedor: Mapped[int] = mapped_column(ForeignKey('proveedor.id'), nullable=True)
     cantidad:     Mapped[int]
     estado:       Mapped[str]
     repuesto:     Mapped['Repuesto'] = relationship('Repuesto', backref='ordenes_compra')
