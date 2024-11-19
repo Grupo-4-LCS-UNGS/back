@@ -1,7 +1,6 @@
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, relationship, mapped_column
 from extensiones import db
-from models.cliente import Cliente
 from models.modelo_vehiculo import ModeloVehiculo
 from models.usuario import Usuario
 
@@ -14,7 +13,6 @@ class Vehiculo(db.Model):
     estado:     Mapped[str] = mapped_column(nullable=True)
     modelo:     Mapped['ModeloVehiculo'] = relationship('ModeloVehiculo', backref='vehiculos')
     operador:   Mapped['Usuario'] = relationship('Usuario', backref='vehiculo')
-    cliente:    Mapped['Cliente'] = relationship('Cliente', backref='vehiculo_asignado')
     kilometraje:Mapped[int] = mapped_column(nullable=True)
 
     def serialize(self):
@@ -22,7 +20,6 @@ class Vehiculo(db.Model):
             'id': self.id,
             'modelo': self.modelo.serialize() if self.modelo else None,
             'operador': self.operador if self.operador else None,
-            'cliente': self.cliente if self.cliente else None,
             'matricula': self.matricula,
             'id_traccar': self.id_traccar,
             'estado': self.estado
