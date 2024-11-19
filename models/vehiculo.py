@@ -56,4 +56,4 @@ class Vehiculo(db.Model):
 
     @staticmethod
     def encontrarPorPatente(patente):
-        return Vehiculo.query.filter_by(patente= patente).first()
+        return Vehiculo.query.filter_by(matricula= patente).first()
