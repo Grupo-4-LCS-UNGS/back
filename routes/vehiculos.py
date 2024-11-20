@@ -88,3 +88,21 @@ def baja_vehiculo():
     flash('Vehiculo dado de baja', 'success')
 
     redirect(url_for('listar_vehiculos'))
+
+
+
+#cambiar estado de vehiculo
+@vehiculos.route('/vehiculos/estado', methods=['PUT'])
+def cambiar_estado():
+    patente = request.form['patente']
+    estado = request.form['estado']
+
+    vehiculo = Vehiculo.encontrarPorPatente(patente)
+
+    vehiculo.estado = estado
+
+    Vehiculo.actualizar()
+
+    flash('Estado cambiado con exito', 'success')
+
+    redirect(url_for('vehiculos.listar_vehiculos'))
