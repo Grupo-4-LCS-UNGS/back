@@ -24,6 +24,7 @@ def actualizar_marca(id):
     modelo.id_marca_vehiculo = data.get('id_marca_vehiculo')
     modelo.nombre = data.get('nombre', modelo.nombre)
     modelo.litrosx100km = data.get('litrosx100km', modelo.litrosx100km)
+    modelo.anio = data.get('anio', modelo.anio)
     ModeloVehiculo.actualizar()
     return 'OK', 202
 

@@ -9,13 +9,15 @@ class ModeloVehiculo(db.Model):
     nombre:             Mapped[str] = mapped_column(unique=True, nullable=False)
     marca:              Mapped['MarcaVehiculo'] = relationship('MarcaVehiculo', backref='modelos')
     litrosx100km:       Mapped[float]
+    anio:               Mapped[int]   = mapped_column(nullable=True)  
 
     def serialize(self):
         return {
             'id': self.id,
             'marca_vehiculo': self.marca.serialize() if self.marca else None,
             'nombre': self.nombre,
-            'litrosx100km': self.litrosx100km
+            'litrosx100km': self.litrosx100km,
+            'anio': self.anio
         }
 
     @staticmethod
