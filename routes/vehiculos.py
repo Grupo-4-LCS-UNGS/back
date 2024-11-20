@@ -20,6 +20,7 @@ def cargar_vehiculo():
         modelo_id = int(request.form['modelo'])
         patente = str(request.form['patente'])
         kilometraje = int(request.form['kilometraje'])
+        estado = str(request.form['estado'])
 
         modelo = ModeloVehiculo.encontrarPorId(modelo_id)
         if not modelo:
@@ -29,7 +30,8 @@ def cargar_vehiculo():
         nuevo_vehiculo = Vehiculo(
             modelo=modelo,
             matricula=patente,
-            kilometraje=kilometraje
+            kilometraje=kilometraje,
+            estado=estado
         )
 
         Vehiculo.agregar(nuevo_vehiculo)
