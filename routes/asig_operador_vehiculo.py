@@ -8,7 +8,7 @@ asig_operador_vehiculo = Blueprint('asig_operador_vehiculo', __name__)
 @asig_operador_vehiculo.route('/asignacion/<int:id_usuario>/vehiculos/<int:id_vehiculo>/', methods=['PUT'])
 def asignar(id_vehiculo, id_usuario):
     vehiculo = Vehiculo.encontrarPorId(id_vehiculo)
-    usuario = Usuario.encontrarPorId(id_usuario)
+    usuario = Usuario.buscarPorId(id_usuario)
    
     bitacoraAsignaciones = BitacoraAsignaciones(
         vehiculo=vehiculo,

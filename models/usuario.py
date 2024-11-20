@@ -35,6 +35,9 @@ class Usuario(db.Model, UserMixin):
     @staticmethod
     def buscar(nombre):
         return Usuario.query.filter_by(nombre=nombre).first()
+    
+    def buscarPorId(id):
+        return Usuario.query.get(id)
 
    
     def is_active(self):
