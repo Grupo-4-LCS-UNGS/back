@@ -51,7 +51,7 @@ class Vehiculo(db.Model):
 
     @staticmethod
     def encontrarPorId(id):
-        return db.session.get(Vehiculo, id)
+        return Vehiculo.query.get(id)
 
     @staticmethod
     def encontrarPorPatente(patente):
