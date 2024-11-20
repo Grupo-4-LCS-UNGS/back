@@ -112,7 +112,7 @@ def cambiar_estado():
 
     flash('Estado cambiado con exito', 'success')
 
-    redirect(url_for('vehiculos.listar_vehiculos'))
+    return jsonify(vehiculo.serialize()), 200
     
     
 @vehiculos.route('/vehiculos/estadoXid', methods=['PUT'])
@@ -127,4 +127,4 @@ def cambiar_estadoXid():
     Vehiculo.actualizar()
 
 
-    redirect(url_for('vehiculos.listar_vehiculos'))
+    return jsonify(vehiculo.serialize()), 200
