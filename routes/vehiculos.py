@@ -126,6 +126,5 @@ def cambiar_estadoXid():
 
     Vehiculo.actualizar()
 
-    flash('Estado cambiado con exito', 'success')
 
     redirect(url_for('vehiculos.listar_vehiculos'))
