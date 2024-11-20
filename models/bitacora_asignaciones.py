@@ -31,7 +31,7 @@ class BitacoraAsignaciones(db.Model):
 
     @staticmethod
     def listar():
-        return BitacoraAsignaciones.query.all()
+        return BitacoraAsignaciones.query.order_by(BitacoraAsignaciones.id.desc()).all()
 
     @staticmethod
     def listar_json():
