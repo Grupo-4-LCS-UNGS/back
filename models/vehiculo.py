@@ -22,7 +22,9 @@ class Vehiculo(db.Model):
             'operador': self.operador if self.operador else None,
             'matricula': self.matricula,
             'id_traccar': self.id_traccar,
-            'estado': self.estado
+            'estado': self.estado,
+          
+            'kilometraje': self.kilometraje
         }
 
     @staticmethod

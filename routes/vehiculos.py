@@ -3,6 +3,7 @@ from flask import Blueprint, jsonify, request, render_template, flash, redirect,
 from validaciones import *
 
 from models.vehiculo import Vehiculo
+from models.modelo_vehiculo import ModeloVehiculo
 
 vehiculos = Blueprint('vehiculos', __name__)
 
@@ -15,29 +16,34 @@ def listar_vehiculos():
 #endpoint de carga de vehiculo
 @vehiculos.route('/vehiculos/alta', methods=['GET', 'POST'])
 def cargar_vehiculo():
-    if request.method == 'GET':
-        return render_template('altaVehiculo.html')
-    
-    #capturamos los datos
-    
-    modelo = str(request.form['modelo'])
-    
-    patente = str(request.form['patente'])
+    if request.method == 'POST':
+        modelo_id = int(request.form['modelo'])
+        patente = str(request.form['patente'])
+        kilometraje = int(request.form['kilometraje'])
 
-    vehiculo = Vehiculo(modelo=modelo, matricula=patente)
+        modelo = ModeloVehiculo.encontrarPorId(modelo_id)
+        if not modelo:
+            flash('Modelo no encontrado', 'error')
+            return jsonify({'error': 'Modelo no encontrado'}), 404
 
+        nuevo_vehiculo = Vehiculo(
+            modelo=modelo,
+            matricula=patente,
+            kilometraje=kilometraje
+        )
 
-    #deberia hacer verificaciones, al menos sobre patente repetida
-    if Valida.patente(patente):
-        coincidencia = Vehiculo.encontrarPorPatente(patente)
+        Vehiculo.agregar(nuevo_vehiculo)
 
-        if coincidencia is not None:
-            flash('Vehiculo ya ingresado', 'message')
-        else:
-            Vehiculo.agregar(vehiculo)
-            flash('Vehiculo ingresado con exito', 'success')
+        flash('Vehiculo agregado con exito', 'success')
+        return redirect(url_for('vehiculos.listar_vehiculos'))
+        return jsonify({
+            'id': nuevo_vehiculo.id,
+            'modelo': nuevo_vehiculo.modelo.nombre,
+            'patente': nuevo_vehiculo.matricula,
+            'kilometraje': nuevo_vehiculo.kilometraje
+        }), 200
 
-    redirect(url_for('listar_vehiculos'))
+    return render_template('cargar_vehiculo.html')
 
 #endpoint para modificar vehiculo
 @vehiculos.route('/vehiculos/mod', methods=['PUT'])
