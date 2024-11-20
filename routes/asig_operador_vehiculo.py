@@ -1,4 +1,4 @@
-from flask import Blueprint
+from flask import Blueprint, jsonify
 from models.usuario import Usuario
 from models.vehiculo import Vehiculo
 from models.bitacora_asignaciones import BitacoraAsignaciones
@@ -27,3 +27,10 @@ def desasignar(id_asignacion):
     bitacora = BitacoraAsignaciones.encontrarPorId(id_asignacion)
     BitacoraAsignaciones.agregarFechaHoraDesasignacion(id_asignacion)
     return bitacora.serialize(), 201
+
+
+# Obtener todas las asignaciones
+@asig_operador_vehiculo.route('/asignaciones', methods=['GET'])
+def obtener_asignaciones():
+    asignaciones = BitacoraAsignaciones.listar_json()
+    return jsonify(asignaciones)
