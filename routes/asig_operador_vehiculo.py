@@ -5,14 +5,15 @@ from models.bitacora_asignaciones import BitacoraAsignaciones
 
 asig_operador_vehiculo = Blueprint('asig_operador_vehiculo', __name__)
 
-@asig_operador_vehiculo.route('/asignacion/<int:id_usuario>/vehiculos/<int:id_vehiculo>/', methods=['PUT'])
-def asignar(id_vehiculo, id_usuario):
+@asig_operador_vehiculo.route('/asignacion/<int:id_usuario>/vehiculos/<int:id_vehiculo>/km/<float:distancia_inicial>', methods=['PUT'])
+def asignar(id_vehiculo, id_usuario, distancia_inicial):
     vehiculo = Vehiculo.encontrarPorId(id_vehiculo)
     usuario = Usuario.buscarPorId(id_usuario)
    
     bitacoraAsignaciones = BitacoraAsignaciones(
         vehiculo=vehiculo,
-        usuario=usuario
+        usuario=usuario,
+        distancia_inicial=distancia_inicial
     )
     BitacoraAsignaciones.agregar(bitacoraAsignaciones)
     
@@ -22,10 +23,10 @@ def asignar(id_vehiculo, id_usuario):
     
     
 
-@asig_operador_vehiculo.route('/desasignacion/<int:id_asignacion>', methods=['PUT'])
-def desasignar(id_asignacion):
+@asig_operador_vehiculo.route('/desasignacion/<int:id_asignacion>/km/<float:distancia_final>', methods=['PUT'])
+def desasignar(id_asignacion, distancia_final):
     bitacora = BitacoraAsignaciones.encontrarPorId(id_asignacion)
-    BitacoraAsignaciones.agregarFechaHoraDesasignacion(id_asignacion)
+    BitacoraAsignaciones.agregarFechaHoraDesasignacion(id_asignacion, distancia_final)
     return bitacora.serialize(), 201
 
 

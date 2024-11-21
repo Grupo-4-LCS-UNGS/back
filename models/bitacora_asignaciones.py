@@ -1,4 +1,5 @@
 from datetime import datetime
+from tokenize import Double
 from sqlalchemy import ForeignKey, Date, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from extensiones import db
@@ -11,6 +12,8 @@ class BitacoraAsignaciones(db.Model):
     id_usuario: Mapped[int] = mapped_column(ForeignKey('usuario.id'))
     fecha_hora_asignacion: Mapped[datetime] = mapped_column(default=func.now())
     fecha_hora_desasignacion: Mapped[datetime] = mapped_column(nullable=True)
+    distancia_inicial: Mapped[float] = mapped_column(nullable=True)
+    distancia_final: Mapped[float] = mapped_column(nullable=True)
 
     vehiculo: Mapped['Vehiculo'] = relationship('Vehiculo', backref='bitacoras_asignaciones')
     usuario: Mapped['Usuario'] = relationship('Usuario', backref='bitacoras_asignaciones')
@@ -22,6 +25,8 @@ class BitacoraAsignaciones(db.Model):
             'usuario': self.usuario.serialize() if self.usuario else None,
             'fecha_hora_asignacion': self.fecha_hora_asignacion,
             'fecha_hora_desasignacion': self.fecha_hora_desasignacion,
+            'distancia_inicial': self.distancia_inicial,
+            'distancia_final': self.distancia_final
         }
 
     @staticmethod
@@ -42,7 +47,8 @@ class BitacoraAsignaciones(db.Model):
         return BitacoraAsignaciones.query.get(id)
     
     @staticmethod
-    def agregarFechaHoraDesasignacion(id):
+    def agregarFechaHoraDesasignacion(id, distancia_final):
         bitacora = BitacoraAsignaciones.encontrarPorId(id)
         bitacora.fecha_hora_desasignacion = func.now()
+        bitacora.distancia_final = distancia_final
         db.session.commit()
