@@ -1,6 +1,7 @@
 from sqlalchemy import ForeignKey
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from extensiones import db
+from models.usuario import Usuario
 
 class Cliente(db.Model):
     id:         Mapped[int] = mapped_column(primary_key=True)
@@ -12,6 +13,7 @@ class Cliente(db.Model):
     telefono:   Mapped[str] = mapped_column(nullable=True)
     usuario_cliente:    Mapped[str] = mapped_column(nullable=True)
     contrasena: Mapped[str] = mapped_column(nullable=True)
+    operador:   Mapped['Usuario'] = relationship('Usuario', backref='cliente')
 
     def serialize(self):
         return {
@@ -22,7 +24,8 @@ class Cliente(db.Model):
             'email': self.email,
             'telefono': self.telefono,
             'usuario_cliente': self.usuario_cliente,
-            'contrasena': self.contrasena
+            'contrasena': self.contrasena,
+            'operador': self.operador if self.operador else None
         }
 
     @staticmethod

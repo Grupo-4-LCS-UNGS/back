@@ -16,27 +16,28 @@ BEFORE UPDATE ON repuesto
 FOR EACH ROW
 EXECUTE FUNCTION generarOrdenCompra();
 
-CREATE OR REPLACE FUNCTION actualizar_bitacora_operador() RETURNS TRIGGER AS $$
+CREATE OR REPLACE FUNCTION actualizar_bitacora_asignaciones() RETURNS TRIGGER AS $$
 DECLARE
-	tipo text;
-	id_op_aux int;
+	id_vehic_aux int;
 BEGIN
-	IF NEW.id_operador = OLD.id_operador THEN
-		RETURN NEW;
-	END IF;
-	IF NEW.id_operador IS NULL THEN
-		tipo := 'DESASIGNACION';
-		id_op_aux := OLD.id_operador;
+	IF NEW.id_operador IS NOT NULL THEN
+		INSERT INTO bitacora_asignaciones (id_vehiculo, id_usuario, fecha_hora_asignacion)
+		VALUES (NEW.id, NEW.id_operador, NOW());
 	ELSE
-		tipo := 'ASIGNACION';
-		id_op_aux := NEW.id_operador;
+		UPDATE bitacora_asignaciones
+		SET fecha_hora_desasignacion = NOW()
+		WHERE id = (SELECT id
+					FROM bitacora_asignaciones
+					WHERE id_vehiculo = NEW.id
+					ORDER BY fecha_hora_desasignacion DESC
+					LIMIT 1
+		);
 	END IF;
-	INSERT INTO bitacora_asig_operador (id_operador, id_vehiculo, fecha, tipo)
-	VALUES (id_op_aux, OLD.id, NOW(), tipo);
 	RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
-CREATE OR REPLACE TRIGGER actualizar_bitacora_operador_trg
+CREATE OR REPLACE TRIGGER actualizar_bitacora_asignaciones_trg
 AFTER UPDATE ON vehiculo
 FOR EACH ROW
-EXECUTE FUNCTION actualizar_bitacora_operador();
+WHEN (OLD.id_operador IS DISTINCT FROM NEW.id_operador)
+EXECUTE FUNCTION actualizar_bitacora_asignaciones();
