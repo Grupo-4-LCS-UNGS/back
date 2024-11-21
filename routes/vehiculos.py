@@ -13,6 +13,13 @@ def listar_vehiculos():
     vehiculos = Vehiculo.listar_json()
     return jsonify(vehiculos)
 
+@vehiculos.route('/vehiculos/<int:id>')
+def obtener_vehiculo(id):
+    vehiculo = Vehiculo.encontrarPorId(id)
+    if not vehiculo:
+        return jsonify({'error': 'Vehiculo no encontrado'}), 404
+    return jsonify(vehiculo.serialize())
+
 #endpoint de carga de vehiculo
 @vehiculos.route('/vehiculos/alta', methods=['GET', 'POST'])
 def cargar_vehiculo():
@@ -88,3 +95,36 @@ def baja_vehiculo():
     flash('Vehiculo dado de baja', 'success')
 
     redirect(url_for('listar_vehiculos'))
+
+
+
+#cambiar estado de vehiculo
+@vehiculos.route('/vehiculos/estado', methods=['PUT'])
+def cambiar_estado():
+    patente = request.form['patente']
+    estado = request.form['estado']
+
+    vehiculo = Vehiculo.encontrarPorPatente(patente)
+
+    vehiculo.estado = estado
+
+    Vehiculo.actualizar()
+
+    flash('Estado cambiado con exito', 'success')
+
+    return jsonify(vehiculo.serialize()), 200
+    
+    
+@vehiculos.route('/vehiculos/estadoXid', methods=['PUT'])
+def cambiar_estadoXid():
+    id = request.form['id']
+    estado = request.form['estado']
+
+    vehiculo = Vehiculo.encontrarPorId(id)
+
+    vehiculo.estado = estado
+
+    Vehiculo.actualizar()
+
+
+    return jsonify(vehiculo.serialize()), 200
