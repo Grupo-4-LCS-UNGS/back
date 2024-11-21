@@ -1,5 +1,6 @@
 from flask import Flask
-from flask_login import LoginManager 
+from flask_login import LoginManager
+from sqlalchemy import text
 from extensiones import db, bcrypt
 from routes.asig_operador_vehiculo import asig_operador_vehiculo
 from routes.asignaciones_repuestos import asignaciones_repuestos
@@ -10,6 +11,7 @@ from routes.proveedores import proveedores
 from routes.gastos import gastos
 from routes.proveedores_repuesto import proveedores_repuesto
 from routes.usuarios import Usuario
+from setup import crearTriggers
 from validaciones import *
 from config import Config
 from routes.usuarios import usuarios
@@ -58,6 +60,13 @@ app.register_blueprint(asig_operador_vehiculo)
 app.register_blueprint(modelos_vehiculos)
 app.register_blueprint(proveedores_repuesto)
 
+def crear_triggers():
+    with open('triggers.sql', 'r') as file:
+        sql = file.read()
+
+    with db.engine.connect() as conexion:
+        conexion.execute(text(sql))
+
 if not os.getenv('ENV'):
     os.environ['ENV'] = 'development'
     env_file = '.env.development'
@@ -66,6 +75,7 @@ if not os.getenv('ENV'):
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
+        crearTriggers()
 
     debuggear = True
     if os.getenv('ENV') == 'development':
