@@ -20,6 +20,7 @@ from dotenv import load_dotenv
 import os
 from colorama import Fore, Back, Style
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
+from routes.clientes import clientes
 
 
 app = Flask(__name__)
@@ -57,6 +58,7 @@ app.register_blueprint(asignaciones_repuestos)
 app.register_blueprint(asig_operador_vehiculo)
 app.register_blueprint(modelos_vehiculos)
 app.register_blueprint(proveedores_repuesto)
+app.register_blueprint(clientes)
 
 if not os.getenv('ENV'):
     os.environ['ENV'] = 'development'

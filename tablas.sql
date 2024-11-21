@@ -108,7 +108,9 @@ CREATE TABLE cliente (
 	nombre text,
 	direccion text,
 	email text,
-	telefono text
+	telefono text,
+	usuario_cliente text,
+	contrasena text
 );
 
 CREATE TABLE gasto (

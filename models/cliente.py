@@ -10,6 +10,8 @@ class Cliente(db.Model):
     direccion:  Mapped[str] = mapped_column(nullable=True)
     email:      Mapped[str] = mapped_column(nullable=True)
     telefono:   Mapped[str] = mapped_column(nullable=True)
+    usuario_cliente:    Mapped[str] = mapped_column(nullable=True)
+    contrasena: Mapped[str] = mapped_column(nullable=True)
 
     def serialize(self):
         return {
@@ -18,7 +20,9 @@ class Cliente(db.Model):
             'nombre': self.nombre,
             'direccion': self.direccion,
             'email': self.email,
-            'telefono': self.telefono
+            'telefono': self.telefono,
+            'usuario_cliente': self.usuario_cliente,
+            'contrasena': self.contrasena
         }
 
     @staticmethod
