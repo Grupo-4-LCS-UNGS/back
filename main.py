@@ -4,6 +4,7 @@ from sqlalchemy import text
 from extensiones import db, bcrypt
 from routes.asig_operador_vehiculo import asig_operador_vehiculo
 from routes.asignaciones_repuestos import asignaciones_repuestos
+from routes.bitacora_clientes import bitacora_clientes
 from routes.marcas_vehiculos import marcas_vehiculos
 from routes.modelos_vehiculos import modelos_vehiculos
 from routes.ordenes_compra import ordenes_compras
@@ -61,6 +62,7 @@ app.register_blueprint(asig_operador_vehiculo)
 app.register_blueprint(modelos_vehiculos)
 app.register_blueprint(proveedores_repuesto)
 app.register_blueprint(clientes)
+app.register_blueprint(bitacora_clientes)
 
 def crear_triggers():
     with open('triggers.sql', 'r') as file:

@@ -6,7 +6,7 @@ from models.usuario import Usuario
 class Cliente(db.Model):
     id:         Mapped[int] = mapped_column(primary_key=True)
     id_operador:Mapped[int] = mapped_column(ForeignKey('usuario.id'), nullable=True)
-    cuit:       Mapped[int] = mapped_column(unique=True)
+    cuit:       Mapped[str] = mapped_column(unique=True)
     nombre:     Mapped[str] = mapped_column(nullable=True)
     direccion:  Mapped[str] = mapped_column(nullable=True)
     email:      Mapped[str] = mapped_column(nullable=True)
