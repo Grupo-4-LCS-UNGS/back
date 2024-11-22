@@ -1,19 +1,23 @@
-from flask import Blueprint, jsonify
+from flask import Blueprint, jsonify, request
 from models.usuario import Usuario
 from models.vehiculo import Vehiculo
 from models.bitacora_asignaciones import BitacoraAsignaciones
 
 asig_operador_vehiculo = Blueprint('asig_operador_vehiculo', __name__)
 
-@asig_operador_vehiculo.route('/asignacion/<int:id_usuario>/vehiculos/<int:id_vehiculo>/km/<float:distancia_inicial>', methods=['PUT'])
-def asignar(id_vehiculo, id_usuario, distancia_inicial):
-    vehiculo = Vehiculo.encontrarPorId(id_vehiculo)
-    usuario = Usuario.buscarPorId(id_usuario)
+@asig_operador_vehiculo.route('/asignacion', methods=['POST'])
+def asignar():
+    id_vehiculo = request.form.get('id_vehiculo')
+    id_usuario = request.form.get('id_usuario')
+    distancia_inicial = request.form.get('distancia_inicial')
+
+    vehiculo = Vehiculo.encontrarPorId(int(id_vehiculo))
+    usuario = Usuario.buscarPorId(int(id_usuario))
    
     bitacoraAsignaciones = BitacoraAsignaciones(
         vehiculo=vehiculo,
         usuario=usuario,
-        distancia_inicial=distancia_inicial
+        distancia_inicial=float(distancia_inicial)
     )
     BitacoraAsignaciones.agregar(bitacoraAsignaciones)
     
@@ -23,10 +27,14 @@ def asignar(id_vehiculo, id_usuario, distancia_inicial):
     
     
 
-@asig_operador_vehiculo.route('/desasignacion/<int:id_asignacion>/km/<float:distancia_final>', methods=['PUT'])
-def desasignar(id_asignacion, distancia_final):
-    bitacora = BitacoraAsignaciones.encontrarPorId(id_asignacion)
-    BitacoraAsignaciones.agregarFechaHoraDesasignacion(id_asignacion, distancia_final)
+@asig_operador_vehiculo.route('/desasignacion', methods=['POST'])
+def desasignar():
+    id_asignacion = request.form.get('id_asignacion')
+    distancia_final = request.form.get('distancia_final')
+    
+    bitacora = BitacoraAsignaciones.encontrarPorId(int(id_asignacion))
+    BitacoraAsignaciones.agregarFechaHoraDesasignacion(int(id_asignacion), float(distancia_final))
+    
     return bitacora.serialize(), 201
 
 
