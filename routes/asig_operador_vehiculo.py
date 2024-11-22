@@ -20,8 +20,8 @@ def asignar():
     devices_response = requests.get(f"{traccar_api}/devices?uniqueId={id_vehiculo}")
     devices = devices_response.json()
 
-    print(devices)
-    logger.debug(devices)
+    print(devices_response)
+    logger.debug(devices_response)
     device = devices[0]
 
     # Obtener información de la posición del dispositivo
