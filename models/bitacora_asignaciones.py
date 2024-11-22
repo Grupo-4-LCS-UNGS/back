@@ -54,5 +54,5 @@ class BitacoraAsignaciones(db.Model):
         bitacora = BitacoraAsignaciones.encontrarPorId(id)
         bitacora.fecha_hora_desasignacion = func.now()
         bitacora.distancia_final = distancia_final
-        bitacora.distancia_recorrida = round((distancia_final - bitacora.distancia_inicial) / 1000, 2)
+        bitacora.distancia_recorrida = distancia_final - bitacora.distancia_inicial
         db.session.commit()
