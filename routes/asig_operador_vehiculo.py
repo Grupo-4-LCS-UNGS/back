@@ -57,7 +57,7 @@ def asignar():
 @asig_operador_vehiculo.route('/desasignacion', methods=['POST'])
 def desasignar():
     id_asignacion = request.form.get('id_asignacion')
-    distancia_final = request.form.get('distancia_final')
+   
     
     
     bitacora = BitacoraAsignaciones.encontrarPorId(int(id_asignacion))
