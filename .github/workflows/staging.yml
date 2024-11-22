@@ -45,5 +45,6 @@ jobs:
           SECRET_KEY: ${{ secrets.APP_SECRET_KEY }}
           APP_PORT: ${{ secrets.APP_PORT }}
           APP_HOST: ${{ secrets.APP_HOST }}
+          TRACCAR_API: ${{ secrets.TRACCAR_API }}
           ENV: staging
         run: docker-compose -f docker-compose-stage.yml -p g4-api up -d

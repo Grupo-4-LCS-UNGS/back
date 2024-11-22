@@ -15,6 +15,7 @@ services:
       SECRET_KEY: ${SECRET_KEY}
       APP_PORT: ${APP_PORT}
       APP_HOST: ${APP_HOST}
+      TRACCAR_API: ${TRACCAR_API}
       ENV: ${ENV}
     restart: unless-stopped
 
