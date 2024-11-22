@@ -14,6 +14,7 @@ class BitacoraAsignaciones(db.Model):
     fecha_hora_desasignacion: Mapped[datetime] = mapped_column(nullable=True)
     distancia_inicial: Mapped[float] = mapped_column(nullable=True)
     distancia_final: Mapped[float] = mapped_column(nullable=True)
+    distancia_recorrida: Mapped[float] = mapped_column(nullable=True)
 
     vehiculo: Mapped['Vehiculo'] = relationship('Vehiculo', backref='bitacoras_asignaciones')
     usuario: Mapped['Usuario'] = relationship('Usuario', backref='bitacoras_asignaciones')
@@ -26,7 +27,9 @@ class BitacoraAsignaciones(db.Model):
             'fecha_hora_asignacion': self.fecha_hora_asignacion,
             'fecha_hora_desasignacion': self.fecha_hora_desasignacion,
             'distancia_inicial': self.distancia_inicial,
-            'distancia_final': self.distancia_final
+            'distancia_final': self.distancia_final,
+            'distancia_recorrida': self.distancia_recorrida
+            
         }
 
     @staticmethod
@@ -51,4 +54,5 @@ class BitacoraAsignaciones(db.Model):
         bitacora = BitacoraAsignaciones.encontrarPorId(id)
         bitacora.fecha_hora_desasignacion = func.now()
         bitacora.distancia_final = distancia_final
+        bitacora.distancia_recorrida = round((distancia_final - bitacora.distancia_inicial) / 1000, 2)
         db.session.commit()
