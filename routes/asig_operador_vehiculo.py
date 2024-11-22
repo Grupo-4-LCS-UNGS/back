@@ -1,3 +1,4 @@
+from venv import logger
 from flask import Blueprint, jsonify, request
 from models.usuario import Usuario
 from models.vehiculo import Vehiculo
@@ -19,10 +20,9 @@ def asignar():
     devices_response = requests.get(f"{traccar_api}/devices?uniqueId={id_vehiculo}")
     devices = devices_response.json()
 
-    # Encontrar el dispositivo con el uniqueId igual al id_vehiculo
-    device = next((d for d in devices if d['uniqueId'] == id_vehiculo), None)
-    if not device:
-        return jsonify({"error": "Device not found"}), 404
+    print(devices)
+    logger.debug(devices)
+    device = devices[0]
 
     # Obtener información de la posición del dispositivo
     positions_response = requests.get(f"{traccar_api}/positions?id={device['positionId']}")
