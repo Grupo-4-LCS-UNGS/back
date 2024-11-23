@@ -1,5 +1,6 @@
+from email import header
 from venv import logger
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, current_app, url_for
 from models.usuario import Usuario
 from models.vehiculo import Vehiculo
 from models.bitacora_asignaciones import BitacoraAsignaciones
@@ -13,19 +14,37 @@ def asignar():
     id_vehiculo = request.form.get('id_vehiculo')
     id_usuario = request.form.get('id_usuario')
     
+
+    vehiculo = Vehiculo.encontrarPorId(int(id_vehiculo))
+    vehiculo.estado = "En Transito"
+    Vehiculo.actualizar()
     
+    
+
+  
     traccar_api = os.getenv('TRACCAR_API')
 
-    # Obtener información del dispositivo
-    devices_response = requests.get(f"{traccar_api}/devices?uniqueId={id_vehiculo}")
-    devices = devices_response.json()
+    headers = {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': 'Basic aXR1bGFAbG9nb3MubmV0LmFyOkluVGVyMjJTb2w='
+    }
 
-    print(devices_response)
-    logger.debug(devices_response)
+    # Obtener información del dispositivo
+    devices_response = requests.get(f"{traccar_api}/devices?uniqueId={id_vehiculo}", headers=headers)
+    
+    
+   
+
+   
+   
+    
+    
+    devices = devices_response.json()
     device = devices[0]
 
     # Obtener información de la posición del dispositivo
-    positions_response = requests.get(f"{traccar_api}/positions?id={device['positionId']}")
+    positions_response = requests.get(f"{traccar_api}/positions?id={device['positionId']}", headers=headers)
     positions = positions_response.json()
 
     # Encontrar la posición del dispositivo
@@ -57,24 +76,44 @@ def asignar():
 @asig_operador_vehiculo.route('/desasignacion', methods=['POST'])
 def desasignar():
     id_asignacion = request.form.get('id_asignacion')
+    
+        # Llamar a /vehiculos/estadoXid con el id_vehiculo y pasar el estado "En Transito"
+   
+
    
     
     
     bitacora = BitacoraAsignaciones.encontrarPorId(int(id_asignacion))
     
+    vehiculo = Vehiculo.encontrarPorId(int(bitacora.vehiculo.id))
+    vehiculo.estado = "En Transito"
+    Vehiculo.actualizar()
+    
+    
+    
+    
+    
     traccar_api = os.getenv('TRACCAR_API')
+    
+    headers = {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': 'Basic aXR1bGFAbG9nb3MubmV0LmFyOkluVGVyMjJTb2w='
+    }
+
 
     # Obtener información del dispositivo
-    devices_response = requests.get(f"{traccar_api}/devices?uniqueId={bitacora.vehiculo.id}")
+    devices_response = requests.get(f"{traccar_api}/devices?uniqueId={bitacora.vehiculo.id}", headers=headers)
+    
+    
+    
     devices = devices_response.json()
-
-    # Encontrar el dispositivo con el uniqueId igual al id_vehiculo
-    device = next((d for d in devices if d['uniqueId'] == bitacora.vehiculo.id), None)
-    if not device:
-        return jsonify({"error": "Device not found"}), 404
+    device = devices[0]
+    
+    
 
     # Obtener información de la posición del dispositivo
-    positions_response = requests.get(f"{traccar_api}/positions?id={device['positionId']}")
+    positions_response = requests.get(f"{traccar_api}/positions?id={device['positionId']}", headers=headers)
     positions = positions_response.json()
 
     # Encontrar la posición del dispositivo
