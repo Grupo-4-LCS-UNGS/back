@@ -1,7 +1,7 @@
 from flask import Flask
-from flask_login import LoginManager
 from sqlalchemy import text
-from extensiones import db, bcrypt
+from extensiones import db, bcrypt, login_manager, jwt
+
 from routes.asig_operador_vehiculo import asig_operador_vehiculo
 from routes.asignaciones_repuestos import asignaciones_repuestos
 from routes.bitacora_clientes import bitacora_clientes
@@ -11,34 +11,30 @@ from routes.ordenes_compra import ordenes_compras
 from routes.proveedores import proveedores
 from routes.gastos import gastos
 from routes.proveedores_repuesto import proveedores_repuesto
-from routes.usuarios import Usuario
-from setup import crearTriggers
-from validaciones import *
-from config import Config
-from routes.usuarios import usuarios
+from routes.usuarios import Usuario, usuarios
 from routes.vehiculos import vehiculos
 from routes.mantenimientos import mantenimientos
 from routes.repuestos import repuestos
+from routes.clientes import clientes
+
+from setup import crearTriggers
+from config import Config
 from dotenv import load_dotenv
 import os
 from colorama import Fore, Back, Style
-from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
-from routes.clientes import clientes
-
 
 app = Flask(__name__)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = Config.FULL_URL_DB
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = Config.SECRET_KEY
-jwt = JWTManager(app)
-
 
 db.init_app(app)
 
 bcrypt.init_app(app)
 
-login_manager = LoginManager()
+jwt.init_app(app)
+
 login_manager.init_app(app)  
 login_manager.login_view = 'usuarios.login'  
 
