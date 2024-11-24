@@ -5,12 +5,12 @@ from models.proveedor import Proveedor
 from models.repuesto import Repuesto
 
 
-class ProveedorRepuesto(db.Model):
+class PreciosRepuesto(db.Model):
     id_proveedor: Mapped[int] = mapped_column(ForeignKey('proveedor.id'), primary_key=True)
     id_repuesto:  Mapped[int] = mapped_column(ForeignKey('repuesto.id'), primary_key=True)
     costo:        Mapped[float]
-    proveedor:    Mapped['Proveedor'] = relationship('Proveedor', backref='provee')
-    repuesto:     Mapped['Repuesto'] = relationship('Repuesto', backref='proveedores')
+    proveedor:    Mapped['Proveedor'] = relationship('Proveedor', backref='precios')
+    repuesto:     Mapped['Repuesto'] = relationship('Repuesto', backref='catalogo')
 
     def serialize(self):
         return {
@@ -21,20 +21,20 @@ class ProveedorRepuesto(db.Model):
 
     @staticmethod
     def listar():
-        return ProveedorRepuesto.query.all()
+        return PreciosRepuesto.query.all()
 
     @staticmethod
     def listar_json():
-        return [proveedor_repuesto.serialize() for proveedor_repuesto in ProveedorRepuesto.listar()]
+        return [precios_repuesto.serialize() for precios_repuesto in PreciosRepuesto.listar()]
 
     @staticmethod
-    def agregar(proveedor_repuesto):
-        db.session.add(proveedor_repuesto)
+    def agregar(precios_repuesto):
+        db.session.add(precios_repuesto)
         db.session.commit()
 
     @staticmethod
-    def eliminar(proveedor_repuesto):
-        db.session.delete(proveedor_repuesto)
+    def eliminar(precios_repuesto):
+        db.session.delete(precios_repuesto)
         db.session.commit()
 
     @staticmethod
@@ -43,4 +43,4 @@ class ProveedorRepuesto(db.Model):
 
     @staticmethod
     def encontrarPorId(id_proveedor, id_repuesto):
-        return db.session.get(ProveedorRepuesto, (id_proveedor, id_repuesto))
+        return db.session.get(PreciosRepuesto, (id_proveedor, id_repuesto))

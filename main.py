@@ -10,7 +10,7 @@ from routes.modelos_vehiculos import modelos_vehiculos
 from routes.ordenes_compra import ordenes_compras
 from routes.proveedores import proveedores
 from routes.gastos import gastos
-from routes.proveedores_repuesto import proveedores_repuesto
+from routes.PreciosRepuesto import proveedores_repuesto
 from routes.usuarios import Usuario, usuarios
 from routes.vehiculos import vehiculos
 from routes.mantenimientos import mantenimientos
@@ -56,7 +56,7 @@ app.register_blueprint(gastos)
 app.register_blueprint(asignaciones_repuestos)
 app.register_blueprint(asig_operador_vehiculo)
 app.register_blueprint(modelos_vehiculos)
-app.register_blueprint(proveedores_repuesto)
+app.register_blueprint(PreciosRepuesto)
 app.register_blueprint(clientes)
 app.register_blueprint(bitacora_clientes)
 

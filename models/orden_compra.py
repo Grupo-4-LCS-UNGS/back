@@ -1,5 +1,6 @@
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+from models.PreciosRepuesto import PreciosRepuesto
 from extensiones import db
 from models.proveedor import Proveedor
 from models.repuesto import Repuesto
@@ -9,25 +10,24 @@ from datetime import datetime
 
 class OrdenCompra(db.Model):
     id:           Mapped[int] = mapped_column(primary_key=True)
-    id_repuesto:  Mapped[int] = mapped_column(ForeignKey('repuesto.id'))
-    id_proveedor: Mapped[int] = mapped_column(ForeignKey('proveedor.id'), nullable=True)
+    id_PreciosRepuesto: Mapped[int] = mapped_column(ForeignKey('precios_repuesto.id'))
     cantidad:     Mapped[int]
     estado:       Mapped[str]
-    repuesto:     Mapped['Repuesto'] = relationship('Repuesto', backref='ordenes_compra')
-    proveedor:    Mapped['Proveedor'] = relationship('Proveedor', backref='repuestos')
     fecha_recepcion: Mapped[datetime] = mapped_column(DateTime, nullable=True)
     fecha_creacion: Mapped[datetime] = mapped_column(DateTime, default=datetime.now)
+    precios_repuesto: Mapped[PreciosRepuesto] = relationship('PreciosRepuesto', backref='ordenes_compra')
+    
+    
     
     
     def serialize(self):
         return {
             'id': self.id,
-            'repuesto': self.repuesto.serialize() if self.repuesto else None,
-            'proveedor': self.proveedor.serialize() if self.repuesto else None,
             'cantidad': self.cantidad,
             'estado': self.estado,
             'fecha_creacion': self.fecha_creacion,
-            'fecha_recepcion': self.fecha_recepcion
+            'fecha_recepcion': self.fecha_recepcion,
+            'PreciosRepuesto': self.PreciosRepuesto.serialize() if self.PreciosRepuesto else None
         }
 
     @staticmethod
