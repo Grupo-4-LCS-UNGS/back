@@ -10,13 +10,12 @@ from datetime import datetime
 
 class OrdenCompra(db.Model):
     id:           Mapped[int] = mapped_column(primary_key=True)
-    id_PreciosRepuesto: Mapped[int] = mapped_column(ForeignKey('precios_repuesto.id'))
     cantidad:     Mapped[int]
     estado:       Mapped[str]
+    id_precio:    Mapped[int] = mapped_column(ForeignKey('precios_repuesto.id'))
     fecha_recepcion: Mapped[datetime] = mapped_column(DateTime, nullable=True)
     fecha_creacion: Mapped[datetime] = mapped_column(DateTime, default=datetime.now)
-    PreciosRepuesto: Mapped['PreciosRepuesto'] = relationship(PreciosRepuesto, backref='OrdenCompra')
-    
+    PreciosRepuesto: Mapped['PreciosRepuesto'] = relationship('PreciosRepuesto', backref='ordenes_compra')    
     
     
     
