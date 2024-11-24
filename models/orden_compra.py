@@ -15,7 +15,7 @@ class OrdenCompra(db.Model):
     estado:       Mapped[str]
     fecha_recepcion: Mapped[datetime] = mapped_column(DateTime, nullable=True)
     fecha_creacion: Mapped[datetime] = mapped_column(DateTime, default=datetime.now)
-    PreciosRepuesto: Mapped[PreciosRepuesto] = relationship('PreciosRepuesto', backref='ordenes_compra')
+    PreciosRepuesto: Mapped['PreciosRepuesto'] = relationship(PreciosRepuesto, backref='OrdenCompra')
     
     
     
