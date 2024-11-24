@@ -1,0 +1,203 @@
+swagger: "2.0"
+info:
+  title: API de Gestión de Flota
+  description: API para gestionar una flota de vehículos.
+  version: 1.0.0
+paths:
+  /repuestos/:
+    get:
+      summary: Listar Repuestos
+      description: Obtiene una lista de todos los repuestos registrados.
+      responses:
+        '200':
+          description: Lista de repuestos.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/RepuestoResponse'
+    
+    post:
+      summary: Alta de Repuesto
+      description: Registra un nuevo repuesto en el sistema.
+      parameters:
+        - in: body
+          name: body
+          description: Datos del nuevo repuesto.
+          required: true
+          schema:
+            $ref: '#/definitions/RepuestoRequest'
+      responses:
+        '200':
+          description: Repuesto creado exitosamente.
+        '400':
+          description: Error al registrar el repuesto.
+          
+  /repuestos/{id}:
+    get:
+      summary: Obtener Repuesto por ID
+      description: Obtiene la información de un repuesto específico a través de su ID.
+      parameters:
+        - in: path
+          name: id
+          description: ID del repuesto a obtener.
+          required: true
+          type: integer
+      responses:
+        '200':
+          description: Información del repuesto.
+          schema:
+            $ref: '#/definitions/RepuestoResponse'
+        '404':
+          description: Repuesto no encontrado.
+
+    delete:
+      summary: Baja de Repuesto
+      description: Elimina un repuesto específico por su ID.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          type: integer
+      responses:
+        '200':
+          description: Repuesto eliminado exitosamente.
+        '400':
+          description: Repuesto no encontrado.
+
+  /repuestos/delModelo/{id_modelo}:
+    get:
+      summary: Obtener Repuestos por Modelo
+      description: Obtiene una lista de repuestos asociados a un modelo específico de vehículo.
+      parameters:
+        - in: path
+          name: id_modelo
+          description: ID del modelo de vehículo.
+          required: true
+          type: integer
+      responses:
+        '200':
+          description: Lista de repuestos asociados al modelo.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/RepuestoResponse'
+        '404':
+          description: Modelo no encontrado.
+
+definitions:
+  VehiculoRequest:
+    type: object
+    properties:
+      id_modelo:
+        type: integer
+      matricula:
+        type: string
+    required:
+      - id_modelo
+      - matricula
+      
+  VehiculoResponse:
+    type: object
+    properties:
+      id:
+        type: integer
+      matricula:
+        type: string
+      id_traccar:
+        type: integer
+        description: ID registrado en la API de geoposicionamiento.
+      estado:
+        type: string
+      kilometraje:
+        type: integer
+      modelo:
+        $ref: '#/definitions/ModeloVehiculoResponse'
+  
+  RepuestoRequest:
+    type: object
+    properties:
+      nombre:
+        type: string
+      stock:
+        type: integer
+      umbral_minimo:
+        type: integer
+        description: Cantidad mínima permitida en stock.
+      umbral_maximo:
+        type: integer
+        description: Cantidad máxima permitida en stock.
+    required:
+      - nombre
+      - stock
+      - umbral_minimo
+      - umbral_maximo
+  
+  RepuestoResponse:
+    type: object
+    properties:
+      id:
+        type: integer
+      nombre:
+        type: string
+      stock:
+        type: integer
+      umbral_minimo:
+        type: integer
+      umbral_maximo:
+        type: integer
+      modelo_vehiculo:
+        $ref: '#/definitions/ModeloVehiculoResponse'
+  
+  MarcaVehiculoRequest:
+    type: object
+    properties:
+      nombre:
+        type: string
+      logo:
+        type: string
+    required:
+      - nombre
+  
+  MarcaVehiculoResponse:
+    type: object
+    properties:
+      id:
+        type: integer
+      nombre:
+        type: string
+      logo:
+        type: string
+  
+  ModeloVehiculoRequest:
+    type: object
+    properties:
+      id_marca_vehiculo:
+        type: integer
+      nombre:
+        type: string
+      litrosx100km:
+        type: number
+        format: float
+        description: Consumo promedio de combustible en litros por cada 100 km.
+      anio:
+        type: integer
+    required:
+      - id_marca_vehiculo
+      - nombre
+      - litrosx100km
+  
+  ModeloVehiculoResponse:
+    type: object
+    properties:
+      id:
+        type: integer
+      nombre:
+        type: string
+      litrosx100km:
+        type: number
+        format: float
+        description: Consumo promedio de combustible en litros por cada 100 km.
+      anio:
+        type: integer
+      marca_vehiculo:
+        $ref: '#/definitions/MarcaVehiculoResponse'
