@@ -44,5 +44,5 @@ class PreciosRepuesto(db.Model):
         db.session.commit()
 
     @staticmethod
-    def encontrarPorId(id_proveedor, id_repuesto):
-        return db.session.get(PreciosRepuesto, (id_proveedor, id_repuesto))
+    def encontrarPorId(id):
+        return db.session.get(PreciosRepuesto, id)
