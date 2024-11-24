@@ -1,6 +1,6 @@
 from flask import Blueprint, request
 
-import PreciosRepuesto
+from models.PreciosRepuesto import PreciosRepuesto
 from models.orden_compra import OrdenCompra
 
 ordenes_compras = Blueprint('ordenes_compras', __name__)
