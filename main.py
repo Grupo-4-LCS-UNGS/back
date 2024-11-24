@@ -1,3 +1,4 @@
+from flasgger import Swagger
 from flask import Flask
 from sqlalchemy import text
 from extensiones import db, bcrypt, login_manager, jwt
@@ -24,6 +25,8 @@ import os
 from colorama import Fore, Back, Style
 
 app = Flask(__name__)
+
+swagger = Swagger(app, template_file='docs/swagger.yaml')
 
 app.config['SQLALCHEMY_DATABASE_URI'] = Config.FULL_URL_DB
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
