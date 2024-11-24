@@ -15,6 +15,7 @@ from routes.vehiculos import vehiculos
 from routes.mantenimientos import mantenimientos
 from routes.repuestos import repuestos
 from routes.clientes import clientes
+from routes.PreciosRepuesto import precios_repuesto_bp
 
 from setup import crearTriggers
 from config import Config
@@ -55,9 +56,9 @@ app.register_blueprint(gastos)
 app.register_blueprint(asignaciones_repuestos)
 app.register_blueprint(asig_operador_vehiculo)
 app.register_blueprint(modelos_vehiculos)
-app.register_blueprint(precios_repuesto)
 app.register_blueprint(clientes)
 app.register_blueprint(bitacora_clientes)
+app.register_blueprint(precios_repuesto_bp)
 
 def crear_triggers():
     with open('triggers.sql', 'r') as file:
