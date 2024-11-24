@@ -15,7 +15,8 @@ class OrdenCompra(db.Model):
     id_precio:    Mapped[int] = mapped_column(ForeignKey('precios_repuesto.id'))
     fecha_recepcion: Mapped[datetime] = mapped_column(DateTime, nullable=True)
     fecha_creacion: Mapped[datetime] = mapped_column(DateTime, default=datetime.now)
-    PreciosRepuesto: Mapped['PreciosRepuesto'] = relationship('PreciosRepuesto', backref='ordenes_compra')    
+    PreciosRepuesto: Mapped['PreciosRepuesto'] = relationship('PreciosRepuesto', backref='ordenes_compra')
+    total:        Mapped[float]    
     
     
     
@@ -26,7 +27,8 @@ class OrdenCompra(db.Model):
             'estado': self.estado,
             'fecha_creacion': self.fecha_creacion,
             'fecha_recepcion': self.fecha_recepcion,
-            'PreciosRepuesto': self.PreciosRepuesto.serialize() if self.PreciosRepuesto else None
+            'PreciosRepuesto': self.PreciosRepuesto.serialize() if self.PreciosRepuesto else None,
+            'total': self.total
         }
 
     @staticmethod

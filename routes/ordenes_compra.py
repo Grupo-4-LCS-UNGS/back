@@ -1,5 +1,6 @@
 from flask import Blueprint, request
 
+import PreciosRepuesto
 from models.orden_compra import OrdenCompra
 
 ordenes_compras = Blueprint('ordenes_compras', __name__)
@@ -11,6 +12,9 @@ def listar_ordenes():
 @ordenes_compras.route('/ordenes_compras/', methods=['POST'])
 def alta_orden():
     data = request.get_json()
+    precio = PreciosRepuesto.encontrarPorId(data.get('id_precio'))
+    data['total'] = data.get('cantidad') * precio.costo
+    
     OrdenCompra.agregar(OrdenCompra(**data))
     return 'OK', 202
 
