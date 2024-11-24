@@ -15,8 +15,8 @@ class PreciosRepuesto(db.Model):
 
     def serialize(self):
         return {
-            'proveedor': self.proveedor,
-            'repuesto': self.repuesto,
+            'proveedor': self.proveedor.serialize() if self.proveedor else None,
+            'repuesto': self.repuesto.serialize() if self.repuesto else None,
             'costo': self.costo,
             'id': self.id
         }
