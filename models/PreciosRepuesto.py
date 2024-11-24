@@ -6,6 +6,7 @@ from models.repuesto import Repuesto
 
 
 class PreciosRepuesto(db.Model):
+    id:          Mapped[int] = mapped_column(primary_key=True)
     id_proveedor: Mapped[int] = mapped_column(ForeignKey('proveedor.id'), primary_key=True)
     id_repuesto:  Mapped[int] = mapped_column(ForeignKey('repuesto.id'), primary_key=True)
     costo:        Mapped[float]
@@ -16,7 +17,8 @@ class PreciosRepuesto(db.Model):
         return {
             'proveedor': self.proveedor,
             'repuesto': self.repuesto,
-            'costo': self.costo
+            'costo': self.costo,
+            'id': self.id
         }
 
     @staticmethod
