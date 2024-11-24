@@ -10,7 +10,6 @@ from routes.modelos_vehiculos import modelos_vehiculos
 from routes.ordenes_compra import ordenes_compras
 from routes.proveedores import proveedores
 from routes.gastos import gastos
-from routes.precios_repuesto import precios_repuesto
 from routes.usuarios import Usuario, usuarios
 from routes.vehiculos import vehiculos
 from routes.mantenimientos import mantenimientos
