@@ -5,7 +5,7 @@ BEGIN
 	IF NEW.stock < NEW.umbral_minimo THEN
 		cant_compra := NEW.umbral_maximo - NEW.stock;
 		INSERT INTO orden_compra (id_repuesto, cantidad, estado)
-		VALUES(NEW.id, cant_compra, 'pendiente');
+		VALUES(NEW.id, cant_compra, 'Pendiente');
 		NEW.stock := NEW.umbral_maximo;
 	END IF;
 	RETURN NEW;
