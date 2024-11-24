@@ -9,8 +9,6 @@ class Mantenimiento(db.Model):
     id_vehiculo:  Mapped[int] = mapped_column(ForeignKey('vehiculo.id'))
     fecha_inicio: Mapped[datetime.date] = mapped_column(Date, nullable=True)
     fecha_fin:    Mapped[datetime.date] = mapped_column(Date, nullable=True)
-    estado:       Mapped[str] = mapped_column(nullable=True)
-    descripcion:  Mapped[str] = mapped_column(nullable=True)
     tipo:         Mapped[str] = mapped_column(nullable=True)
     vehiculo:     Mapped['Vehiculo'] = relationship('Vehiculo', backref='mantenimientos')
 
@@ -19,9 +17,7 @@ class Mantenimiento(db.Model):
             'id': self.id,
             'vehiculo': self.vehiculo.serialize() if self.vehiculo else None,
             'fecha_inicio': self.fecha_inicio,
-            'fecha_fin': self.fecha_fin,
-            'estado': self.estado,
-            'descripcion':self.descripcion
+            'fecha_fin': self.fecha_fin
         }
 
     @staticmethod

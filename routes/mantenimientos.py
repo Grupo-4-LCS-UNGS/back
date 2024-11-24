@@ -18,19 +18,19 @@ def listar_mantenimientos():
 #debe verificar que la cantidad no exceda y que el vehiculo este en la flota,
 #si pasa la verificacion debe generar el registro del mantenimiento,
 #el registro de repuestos y el registro de asignacion de repuestos
-@mantenimientos.route('/mantenimientos/alta')
+@mantenimientos.route('/mantenimientos/alta', methods=['POST'])
 def cargar_mantenimiento():
 
-    matricula = str(request.form['matricula'])
+    id_vehiculo = request.form['id_vehiculo']
     tipo = str(request.form['tipo'])
-    inicio = str(request.form['inicio'])
-    fin = str(request.form['fin'])
-    descripcion = str(request.form['descripcion'])
+    inicio = str(request.form['fecha_inicio'])
+    #la fecha de fin puede no estar definida
+    fin = str(request.form['fecha_fin']) if 'fecha_fin' in request.form else None    
 
     #supongo que en el form se carga una lista de los repuestos con su id y su cantidad, cada uno como dict
     repuestos = request.form['repuestos']
 
-    vehiculo = Vehiculo.encontrarPorPatente(matricula)
+    vehiculo = Vehiculo.encontrarPorId(id_vehiculo)
     mantenimiento = None
 
     #agrego la entrada del mantenimiento si es parte de la flota
@@ -40,7 +40,6 @@ def cargar_mantenimiento():
             fecha_inicio= inicio,
             fecha_fin= fin,
             tipo= tipo,
-            descripcion= descripcion
         )
         Mantenimiento.agregar(mantenimiento)
 
