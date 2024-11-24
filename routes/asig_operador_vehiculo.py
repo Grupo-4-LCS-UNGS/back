@@ -86,7 +86,7 @@ def desasignar():
     bitacora = BitacoraAsignaciones.encontrarPorId(int(id_asignacion))
     
     vehiculo = Vehiculo.encontrarPorId(int(bitacora.vehiculo.id))
-    vehiculo.estado = "En Transito"
+    vehiculo.estado = "Disponible"
     Vehiculo.actualizar()
     
     
