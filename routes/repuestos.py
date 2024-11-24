@@ -1,3 +1,4 @@
+import re
 from flask import request
 from flask import Blueprint
 
@@ -29,3 +30,8 @@ def baja_repuesto(id):
         return 'Repuesto no encontrado', 404
     Repuesto.eliminar(repuesto)
     return 'OK', 202
+
+@repuestos.route('/repuestos/delModelo/<int:id_modelo>', methods=['GET'])
+def obtener_repuestos_por_modelo(id_modelo):
+    repuestos = Repuesto.encontrarRepuestosporModelo(id_modelo)
+    return [repuesto.serialize() for repuesto in repuestos]

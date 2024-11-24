@@ -47,3 +47,7 @@ class Repuesto(db.Model):
     @staticmethod
     def encontrarPorId(id):
         return db.session.get(Repuesto, id)
+    
+    @staticmethod
+    def encontrarRepuestosporModelo(id_modelo):
+        return Repuesto.query.filter_by(id_modelo_vehiculo=id_modelo).all()

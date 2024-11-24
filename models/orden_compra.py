@@ -61,6 +61,15 @@ class OrdenCompra(db.Model):
     @staticmethod
     def informarRecepcion(id):
         orden_compra = OrdenCompra.encontrarPorId(id)
+        
+        precioRepuesto = PreciosRepuesto.encontrarPorId(orden_compra.id_precio)
+        repuesto = Repuesto.encontrarPorId(precioRepuesto.id_repuesto)
+        
+        repuesto.stock += orden_compra.cantidad
+        Repuesto.actualizar()
+         
+        
+        
         orden_compra.fecha_recepcion = datetime.now()
         orden_compra.estado = "Recibido"
         OrdenCompra.actualizar()
