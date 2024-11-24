@@ -9,6 +9,13 @@ repuestos = Blueprint('repuestos', __name__)
 def listar_repuestos():
     return Repuesto.listar_json()
 
+@repuestos.route('/repuestos/<int:id>')
+def obtener_repuesto(id):
+    repuesto = Repuesto.encontrarPorId(id)
+    if repuesto == None:
+        return 'Repuesto no encontrado', 404
+    return repuesto.serialize()
+
 @repuestos.route('/repuestos/', methods=['POST'])
 def alta_repuesto():
     data = request.get_json()
