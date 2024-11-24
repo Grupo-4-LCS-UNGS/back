@@ -6,9 +6,9 @@ from models.repuesto import Repuesto
 
 
 class PreciosRepuesto(db.Model):
-    id:          Mapped[int] = mapped_column(primary_key=True)
-    id_proveedor: Mapped[int] = mapped_column(ForeignKey('proveedor.id'), primary_key=True)
-    id_repuesto:  Mapped[int] = mapped_column(ForeignKey('repuesto.id'), primary_key=True)
+    id:          Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    id_proveedor: Mapped[int] = mapped_column(ForeignKey('proveedor.id'))
+    id_repuesto:  Mapped[int] = mapped_column(ForeignKey('repuesto.id'))
     costo:        Mapped[float]
     proveedor:    Mapped['Proveedor'] = relationship('Proveedor', backref='precios')
     repuesto:     Mapped['Repuesto'] = relationship('Repuesto', backref='catalogo')
