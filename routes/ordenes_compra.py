@@ -32,3 +32,9 @@ def baja_orden(id):
         return 'Orden de compra no encontrada', 404
     OrdenCompra.eliminar(orden_compra)
     return 'OK', 202
+
+
+@ordenes_compras.route('/ordenes_compras/recibida/<int:id>', methods=['PUT'])
+def informar_recepcion(id):
+    OrdenCompra.informarRecepcion(id)
+    return 'OK', 202

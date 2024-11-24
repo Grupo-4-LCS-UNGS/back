@@ -3,6 +3,8 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from extensiones import db
 from models.proveedor import Proveedor
 from models.repuesto import Repuesto
+from sqlalchemy import DateTime
+from datetime import datetime
 
 
 class OrdenCompra(db.Model):
@@ -13,13 +15,19 @@ class OrdenCompra(db.Model):
     estado:       Mapped[str]
     repuesto:     Mapped['Repuesto'] = relationship('Repuesto', backref='ordenes_compra')
     proveedor:    Mapped['Proveedor'] = relationship('Proveedor', backref='repuestos')
+    fecha_recepcion: Mapped[datetime] = mapped_column(DateTime, nullable=True)
+    fecha_creacion: Mapped[datetime] = mapped_column(DateTime, default=datetime.now)
+    
+    
     def serialize(self):
         return {
             'id': self.id,
             'repuesto': self.repuesto.serialize() if self.repuesto else None,
             'proveedor': self.proveedor.serialize() if self.repuesto else None,
             'cantidad': self.cantidad,
-            'estado': self.estado
+            'estado': self.estado,
+            'fecha_creacion': self.fecha_creacion,
+            'fecha_recepcion': self.fecha_recepcion
         }
 
     @staticmethod
@@ -47,3 +55,12 @@ class OrdenCompra(db.Model):
     @staticmethod
     def encontrarPorId(id):
         return db.session.get(OrdenCompra, id)
+    
+    
+    @staticmethod
+    def informarRecepcion(id):
+        orden_compra = OrdenCompra.encontrarPorId(id)
+        orden_compra.fecha_recepcion = datetime.now()
+        orden_compra.estado = "Recibido"
+        OrdenCompra.actualizar()
+        return orden_compra.serialize()
