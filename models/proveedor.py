@@ -15,7 +15,8 @@ class Proveedor(db.Model):
             'nombre': self.nombre,
             'direccion': self.direccion,
             'telefono': self.telefono,
-            'cuit': self.cuit
+            'cuit': self.cuit,
+            'email': self.email
         }
 
     @staticmethod
