@@ -46,3 +46,9 @@ def actualizar(id_proveedor, id_repuesto):
     proveedor_repuesto.costo = data.get('costo', proveedor_repuesto.costo)
     PreciosRepuesto.actualizar()
     return 'OK', 202
+
+
+@precios_repuesto_bp.route('/precios/repuestos/<int:id_repuesto>/')
+def obtener_por_repuesto(id_repuesto):
+    precios = PreciosRepuesto.query.filter_by(id_repuesto=id_repuesto).all()
+    return [precio.serialize() for precio in precios]
