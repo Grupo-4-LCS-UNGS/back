@@ -89,6 +89,7 @@ def desasignar():
     
     vehiculo = Vehiculo.encontrarPorId(int(bitacora.vehiculo.id))
     vehiculo.estado = "Disponible"
+    vehiculo.operador = None
     Vehiculo.actualizar()
     
     
