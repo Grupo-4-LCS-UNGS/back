@@ -1,4 +1,5 @@
-from flask import Blueprint, jsonify, request, redirect, url_for
+from flask import Blueprint, jsonify, request, redirect, url_for, current_app
+from venv import logger
 
 from validaciones import *
 
@@ -21,16 +22,34 @@ def listar_mantenimientos():
 @mantenimientos.route('/mantenimientos/alta', methods=['POST'])
 def cargar_mantenimiento():
 
-    id_vehiculo = request.form['id_vehiculo']
-    tipo = str(request.form['tipo'])
-    inicio = str(request.form['fecha_inicio'])
-    #la fecha de fin puede no estar definida
-    fin = str(request.form['fecha_fin']) if 'fecha_fin' in request.form else None    
+    current_app.logger.info('Cargando mantenimiento')
+    current_app.logger.debug(request.json)
 
-    #supongo que en el form se carga una lista de los repuestos con su id y su cantidad, cada uno como dict
-    repuestos = request.form['repuestos']
+    data = request.json
+    id_vehiculo = data['id_vehiculo']
+    tipo = str(data['tipo'])
+    inicio = str(data['fecha_inicio'])
+    fin = str(data['fecha_fin']) if 'fecha_fin' in data else None    
+
+    repuestos = data['repuestos']
+
+    #supongo que en el form se carga una lista de los repuestos con su id y su cantidad, 
+    # cada uno como dict
+    
+    # No supongas, documentalo y comunicalo al resto de tu equipo (nt)
+    #repuestos = request.form['repuestos']
+    
+    
 
     vehiculo = Vehiculo.encontrarPorId(id_vehiculo)
+    
+    current_app.logger.info('Vehiculo de form:')
+    current_app.logger.debug(data['id_vehiculo'])
+    current_app.logger.info('Vehiculo de modelo:')
+    current_app.logger.debug(vehiculo)
+    
+
+    
     mantenimiento = None
 
     #agrego la entrada del mantenimiento si es parte de la flota
@@ -46,15 +65,28 @@ def cargar_mantenimiento():
     #me fijo si el mantenimiento se cargo con exito para impactar en la asignacion de repuestos
     if mantenimiento is not None:
         for repuesto in repuestos:
-            producto = Repuesto.encontrarPorId(repuesto['id'])
-            asignacion = AsignacionRepuestos(mantenimiento, producto, stock= repuesto['cantidad'])
+            
+            #convertir el id a int
+           
+            
+            producto = Repuesto.encontrarPorId(int(repuesto['id']))
+            asignacion = AsignacionRepuestos(
+                id_mantenimiento=mantenimiento.id,
+                id_repuesto=producto.id,
+                cantidad=repuesto['cantidad']
+            )
             AsignacionRepuestos.agregar(asignacion)
 
             #aca debe actualizar el stock
             producto.stock -= repuesto['cantidad']
             Repuesto.actualizar()
+    
+    else:
+        current_app.logger.error('No se pudo cargar el mantenimiento')
+        return "No se pudo cargar el mantenimiento", 400
+        
 
-    redirect(url_for('mantenimientos.listar_mantenimientos'))
+    return jsonify(mantenimiento.serialize()), 201
 
 @mantenimientos.route('/mantenimientos/mod')
 def mod_mantenimiento():
