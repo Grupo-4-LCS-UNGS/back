@@ -44,7 +44,7 @@ def cargar_mantenimiento():
         Mantenimiento.agregar(mantenimiento)
 
     #me fijo si el mantenimiento se cargo con exito para impactar en la asignacion de repuestos
-    if mantenimiento.id is not None:
+    if mantenimiento is not None:
         for repuesto in repuestos:
             producto = Repuesto.encontrarPorId(repuesto['id'])
             asignacion = AsignacionRepuestos(mantenimiento, producto, stock= repuesto['cantidad'])
