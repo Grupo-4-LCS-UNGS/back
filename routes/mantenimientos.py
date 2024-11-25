@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify, request, redirect, url_for, current_app
 from venv import logger
 
-import usuario
+
 from validaciones import *
 
 from models.vehiculo import Vehiculo
