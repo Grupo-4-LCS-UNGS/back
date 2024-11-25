@@ -4,18 +4,78 @@ info:
   description: API para gestionar una flota de vehículos.
   version: 1.0.0
 paths:
+  /proveedores/:
+    get:
+      summary: Listar Proveedores
+      description: Obtiene una lista de todos los proveedores registrados.
+      responses:
+        '202':
+          description: Lista de repuestos.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ProveedorResponse'
+    post:
+      summary: Alta de Proveedor
+      description: Registra un nuevo proveedor en el sistema.
+      parameters:
+        - in: body
+          name: body
+          description: Datos del nuevo proveedor.
+          required: true
+          schema:
+            $ref: '#/definitions/ProveedorRequest'
+      responses:
+        '202':
+          description: 'OK'
+
+  /proveedores/{id}:
+    put:
+      summary: Actualizar Proveedor
+      description: Actualiza la información de un proveedor existente por su ID.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          type: integer
+        - in: body
+          name: body
+          description: Datos actualizados del proveedor.
+          required: true
+          schema:
+            $ref: '#/definitions/ProveedorRequest'
+      responses:
+        '202':
+          description: OK
+        '404':
+          description: Proveedor no encontrado.
+
+    delete:
+      summary: Baja de Proveedor
+      description: Elimina un proveedor específico por su ID.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          type: integer
+      responses:
+        '202':
+          description: OK
+        '400':
+          description: Proveedor no encontrado.
+
   /repuestos/:
     get:
       summary: Listar Repuestos
       description: Obtiene una lista de todos los repuestos registrados.
       responses:
-        '200':
+        '202':
           description: Lista de repuestos.
           schema:
             type: array
             items:
               $ref: '#/definitions/RepuestoResponse'
-    
+
     post:
       summary: Alta de Repuesto
       description: Registra un nuevo repuesto en el sistema.
@@ -27,11 +87,11 @@ paths:
           schema:
             $ref: '#/definitions/RepuestoRequest'
       responses:
-        '200':
+        '202':
           description: Repuesto creado exitosamente.
         '400':
           description: Error al registrar el repuesto.
-          
+
   /repuestos/{id}:
     get:
       summary: Obtener Repuesto por ID
@@ -39,11 +99,10 @@ paths:
       parameters:
         - in: path
           name: id
-          description: ID del repuesto a obtener.
           required: true
           type: integer
       responses:
-        '200':
+        '202':
           description: Información del repuesto.
           schema:
             $ref: '#/definitions/RepuestoResponse'
@@ -59,8 +118,8 @@ paths:
           required: true
           type: integer
       responses:
-        '200':
-          description: Repuesto eliminado exitosamente.
+        '202':
+          description: OK
         '400':
           description: Repuesto no encontrado.
 
@@ -75,7 +134,7 @@ paths:
           required: true
           type: integer
       responses:
-        '200':
+        '202':
           description: Lista de repuestos asociados al modelo.
           schema:
             type: array
@@ -95,7 +154,7 @@ definitions:
     required:
       - id_modelo
       - matricula
-      
+
   VehiculoResponse:
     type: object
     properties:
@@ -112,7 +171,9 @@ definitions:
         type: integer
       modelo:
         $ref: '#/definitions/ModeloVehiculoResponse'
-  
+      operador:
+        $ref: '#/definitions/UsuarioResponse'
+
   RepuestoRequest:
     type: object
     properties:
@@ -131,7 +192,7 @@ definitions:
       - stock
       - umbral_minimo
       - umbral_maximo
-  
+
   RepuestoResponse:
     type: object
     properties:
@@ -147,7 +208,7 @@ definitions:
         type: integer
       modelo_vehiculo:
         $ref: '#/definitions/ModeloVehiculoResponse'
-  
+
   MarcaVehiculoRequest:
     type: object
     properties:
@@ -157,7 +218,7 @@ definitions:
         type: string
     required:
       - nombre
-  
+
   MarcaVehiculoResponse:
     type: object
     properties:
@@ -167,7 +228,7 @@ definitions:
         type: string
       logo:
         type: string
-  
+
   ModeloVehiculoRequest:
     type: object
     properties:
@@ -185,7 +246,7 @@ definitions:
       - id_marca_vehiculo
       - nombre
       - litrosx100km
-  
+
   ModeloVehiculoResponse:
     type: object
     properties:
@@ -201,3 +262,53 @@ definitions:
         type: integer
       marca_vehiculo:
         $ref: '#/definitions/MarcaVehiculoResponse'
+
+  UsuarioRequest:
+    type: object
+    properties:
+      nombre:
+        type: string
+      contrasena:
+        type: string
+      rol:
+        type: string
+    required:
+      - nombre
+      - contrasena
+      - rol
+
+  UsuarioResponse:
+    type: object
+    properties:
+      id:
+        type: integer
+      nombre:
+        type: string
+      rol:
+        type: string
+
+  ProveedorRequest:
+    type: object
+    properties:
+      nombre:
+        type: string
+      direccion:
+        type: string
+      telefono:
+        type: string
+      cuit:
+        type: string
+
+  ProveedorResponse:
+    type: object
+    properties:
+      id:
+        type: integer
+      nombre:
+        type: string
+      direccion:
+        type: string
+      telefono:
+        type: string
+      cuit:
+        type: string
