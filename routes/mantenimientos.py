@@ -53,7 +53,7 @@ def cargar_mantenimiento():
 
     vehiculo = Vehiculo.encontrarPorId(id_vehiculo)
     vehiculo.estado = "En mantenimiento"
-    vehiculo.operador = usuario.id
+    vehiculo.operador = usuario
     Vehiculo.actualizar()
     
     current_app.logger.info('Vehiculo de form:')
