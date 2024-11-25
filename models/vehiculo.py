@@ -19,7 +19,7 @@ class Vehiculo(db.Model):
         return {
             'id': self.id,
             'modelo': self.modelo.serialize() if self.modelo else None,
-            'operador': self.operador if self.operador else None,
+            'operador': self.operador.serialize() if self.operador else None,
             'matricula': self.matricula,
             'id_traccar': self.id_traccar,
             'estado': self.estado,
