@@ -14,7 +14,7 @@ mantenimientos = Blueprint('mantenimientos', __name__)
 
 @mantenimientos.route('/mantenimientos', methods=['GET'])
 def listar_mantenimientos():
-    mantenimientos = Mantenimiento.listar_json().order_by(Mantenimiento.fecha_inicio.desc())
+    mantenimientos = Mantenimiento.listar_json()
     return jsonify(mantenimientos)
 
 #el endpoint recibe los datos del mantenimiento y los id de los repuestos junto a su cantidad,
