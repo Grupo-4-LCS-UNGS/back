@@ -112,3 +112,14 @@ def historial_vehiculo(id):
             resultado.append(mantenimiento.serialize())
 
     return resultado, 200
+
+
+@mantenimientos.route('/mantenimientos/finalizar/<int:id>', methods=['GET'])
+def finalizar_mantenimiento(id):
+    mantenimiento = Mantenimiento.encontrarPorId(id)
+    if mantenimiento is None:
+        return 'Mantenimiento no encontrado', 404
+    mantenimiento.fecha_fin = datetime.now()
+    mantenimiento.estado = 'finalizado'
+    Mantenimiento.actualizar()
+    return 'OK', 202
