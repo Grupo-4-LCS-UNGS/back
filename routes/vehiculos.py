@@ -1,5 +1,6 @@
 from flask import Blueprint, jsonify, request, render_template, flash, redirect, url_for
 
+from usuario import Usuario
 from validaciones import *
 
 from models.vehiculo import Vehiculo
@@ -119,10 +120,18 @@ def cambiar_estado():
 def cambiar_estadoXid():
     id = request.form['id']
     estado = request.form['estado']
+    operador = request.form['operador']
 
     vehiculo = Vehiculo.encontrarPorId(id)
 
     vehiculo.estado = estado
+    
+    if estado == 'Disponible':
+        vehiculo.operador = None
+    else:
+        
+        usuario = Usuario.encontrarPorId(operador)
+        vehiculo.operador = usuario
 
     Vehiculo.actualizar()
 
