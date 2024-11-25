@@ -1,6 +1,7 @@
 from flask import Blueprint, jsonify, request, redirect, url_for, current_app
 from venv import logger
 
+import usuario
 from validaciones import *
 
 from models.vehiculo import Vehiculo
@@ -29,7 +30,8 @@ def cargar_mantenimiento():
     id_vehiculo = data['id_vehiculo']
     tipo = str(data['tipo'])
     inicio = str(data['fecha_inicio'])
-    fin = str(data['fecha_fin']) if 'fecha_fin' in data else None    
+    fin = str(data['fecha_fin']) if 'fecha_fin' in data else None 
+    id_usuario = data['id_usuario']   
 
     repuestos = data['repuestos']
 
@@ -59,6 +61,7 @@ def cargar_mantenimiento():
             fecha_inicio= inicio,
             fecha_fin= fin,
             tipo= tipo,
+            id_usuario= id_usuario
         )
         Mantenimiento.agregar(mantenimiento)
 
@@ -67,7 +70,6 @@ def cargar_mantenimiento():
         for repuesto in repuestos:
             
             #convertir el id a int
-           
             
             producto = Repuesto.encontrarPorId(int(repuesto['id']))
             asignacion = AsignacionRepuestos(
