@@ -1,12 +1,19 @@
 CREATE OR REPLACE FUNCTION generarOrdenCompra() RETURNS TRIGGER AS $$
 DECLARE
 	cant_compra int;
+	precio RECORD;
 BEGIN
+	SELECT id, costo
+	INTO precio
+	FROM precios_repuesto
+	WHERE id_repuesto = NEW.id
+	ORDER BY costo ASC
+	LIMIT 1;
+	
 	IF NEW.stock < NEW.umbral_minimo THEN
 		cant_compra := NEW.umbral_maximo - NEW.stock;
-		INSERT INTO orden_compra (id_repuesto, cantidad, estado)
-		VALUES(NEW.id, cant_compra, 'Pendiente');
-		NEW.stock := NEW.umbral_maximo;
+		INSERT INTO orden_compra (cantidad, estado, id_precio, fecha_creacion, total)
+		VALUES(cant_compra, 'Pendiente', precio.id, NOW(), precio.costo*cant_compra);
 	END IF;
 	RETURN NEW;
 END;
