@@ -54,7 +54,7 @@ def cargar_mantenimiento():
             producto.stock -= repuesto['cantidad']
             Repuesto.actualizar()
 
-    redirect(url_for('listar_mantenimientos'))
+    redirect(url_for('mantenimientos.listar_mantenimientos'))
 
 @mantenimientos.route('/mantenimientos/mod')
 def mod_mantenimiento():
