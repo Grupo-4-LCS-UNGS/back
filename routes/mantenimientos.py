@@ -31,6 +31,11 @@ def cargar_mantenimiento():
     tipo = str(data['tipo'])
     inicio = str(data['fecha_inicio'])
     fin = str(data['fecha_fin']) if 'fecha_fin' in data else None 
+    
+    if fin == "":
+        fin = None
+        
+    
     id_usuario = data['id_usuario']   
 
     repuestos = data['repuestos']
