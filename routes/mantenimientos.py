@@ -10,7 +10,7 @@ from models.mantenimiento import Mantenimiento
 from models.repuesto import Repuesto
 from models.asignacion_repuestos import AsignacionRepuestos
 from models.usuario import Usuario
-import vehiculo
+from models.vehiculo import Vehiculo
 
 mantenimientos = Blueprint('mantenimientos', __name__)
 
