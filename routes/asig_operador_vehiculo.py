@@ -17,6 +17,8 @@ def asignar():
 
     vehiculo = Vehiculo.encontrarPorId(int(id_vehiculo))
     vehiculo.estado = "En Transito"
+    usuario = Usuario.buscarPorId(int(id_usuario))
+    vehiculo.operador = usuario
     Vehiculo.actualizar()
     
     
