@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, request, render_template, flash, redirect, url_for
 
-from usuario import Usuario
+from models.usuario import Usuario
 from validaciones import *
 
 from models.vehiculo import Vehiculo
