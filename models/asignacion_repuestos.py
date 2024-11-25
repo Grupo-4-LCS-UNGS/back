@@ -18,7 +18,7 @@ class AsignacionRepuestos(db.Model):
     def serialize(self):
         return {
             'id': self.id,
-            'manteniento': self.mantenimiento.serialize() if self.mantenimiento else None,
+            'mantenimiento': self.mantenimiento.serialize() if self.mantenimiento else None,
             'repuesto': self.repuesto.serialize() if self.repuesto else None,
             'cantidad': self.cantidad,
             'fecha': self.fecha
@@ -49,3 +49,10 @@ class AsignacionRepuestos(db.Model):
     @staticmethod
     def encontrarPorId(id):
         return db.session.get(AsignacionRepuestos, id)
+    
+    
+    @staticmethod
+    def listar_por_mantenimiento(id_mantenimiento):
+        return [asignacion.serialize() for asignacion in AsignacionRepuestos.query.filter_by(id_mantenimiento=id_mantenimiento).all()]
+    
+    

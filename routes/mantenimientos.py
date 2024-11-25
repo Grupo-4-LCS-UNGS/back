@@ -1,5 +1,6 @@
 from flask import Blueprint, jsonify, request, redirect, url_for, current_app
 from venv import logger
+from datetime import datetime
 
 
 from validaciones import *
@@ -8,6 +9,8 @@ from models.vehiculo import Vehiculo
 from models.mantenimiento import Mantenimiento
 from models.repuesto import Repuesto
 from models.asignacion_repuestos import AsignacionRepuestos
+from models.usuario import Usuario
+from models.vehiculo import Vehiculo
 
 mantenimientos = Blueprint('mantenimientos', __name__)
 
@@ -31,6 +34,11 @@ def cargar_mantenimiento():
     tipo = str(data['tipo'])
     inicio = str(data['fecha_inicio'])
     fin = str(data['fecha_fin']) if 'fecha_fin' in data else None 
+    
+    if fin == "":
+        fin = None
+        
+    
     id_usuario = data['id_usuario']   
 
     repuestos = data['repuestos']
@@ -41,9 +49,12 @@ def cargar_mantenimiento():
     # No supongas, documentalo y comunicalo al resto de tu equipo (nt)
     #repuestos = request.form['repuestos']
     
-    
+    usuario = Usuario.buscarPorId(id_usuario)
 
     vehiculo = Vehiculo.encontrarPorId(id_vehiculo)
+    vehiculo.estado = "En mantenimiento"
+    vehiculo.operador = usuario
+    Vehiculo.actualizar()
     
     current_app.logger.info('Vehiculo de form:')
     current_app.logger.debug(data['id_vehiculo'])
@@ -64,6 +75,8 @@ def cargar_mantenimiento():
             id_usuario= id_usuario
         )
         Mantenimiento.agregar(mantenimiento)
+        
+        
 
     #me fijo si el mantenimiento se cargo con exito para impactar en la asignacion de repuestos
     if mantenimiento is not None:
@@ -107,3 +120,21 @@ def historial_vehiculo(id):
             resultado.append(mantenimiento.serialize())
 
     return resultado, 200
+
+
+@mantenimientos.route('/mantenimientos/finalizar/<int:id>', methods=['GET'])
+def finalizar_mantenimiento(id):
+    mantenimiento = Mantenimiento.encontrarPorId(id)
+    if mantenimiento is None:
+        return 'Mantenimiento no encontrado', 404
+    mantenimiento.fecha_fin = datetime.now()
+    mantenimiento.estado = 'finalizado'
+    
+    vehiculo = Vehiculo.encontrarPorId(mantenimiento.id_vehiculo)
+    vehiculo.estado = "Disponible"
+    vehiculo.operador = None
+    Vehiculo.actualizar()
+    
+    
+    Mantenimiento.actualizar()
+    return 'OK', 202

@@ -17,6 +17,8 @@ def asignar():
 
     vehiculo = Vehiculo.encontrarPorId(int(id_vehiculo))
     vehiculo.estado = "En Transito"
+    usuario = Usuario.buscarPorId(int(id_usuario))
+    vehiculo.operador = usuario
     Vehiculo.actualizar()
     
     
@@ -87,6 +89,7 @@ def desasignar():
     
     vehiculo = Vehiculo.encontrarPorId(int(bitacora.vehiculo.id))
     vehiculo.estado = "Disponible"
+    vehiculo.operador = None
     Vehiculo.actualizar()
     
     

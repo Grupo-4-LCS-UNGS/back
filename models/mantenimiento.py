@@ -27,7 +27,9 @@ class Mantenimiento(db.Model):
 
     @staticmethod
     def listar():
-        return Mantenimiento.query.all()
+        #retornar pero ordenando el id de manera descendente
+        return Mantenimiento.query.order_by(Mantenimiento.id.desc()).all()
+        
 
     @staticmethod
     def listar_json():

@@ -8,6 +8,11 @@ asignaciones_repuestos = Blueprint('asignaciones_repuestos', __name__)
 def listar_asignaciones():
     return AsignacionRepuestos.listar_json()
 
+@asignaciones_repuestos.route('/asignaciones_repuestos/por_mantenimiento/<int:id>', methods=['GET'])
+def listar_asignaciones_por_mantenimiento(id):
+    return AsignacionRepuestos.listar_por_mantenimiento(id)
+
+
 @asignaciones_repuestos.route('/asignaciones_repuestos/', methods=['POST'])
 def alta_asignacion():
     data = request.get_json()
