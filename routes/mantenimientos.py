@@ -9,7 +9,7 @@ from models.asignacion_repuestos import AsignacionRepuestos
 
 mantenimientos = Blueprint('mantenimientos', __name__)
 
-@mantenimientos.route('/mantenimientos')
+@mantenimientos.route('/mantenimientos', methods=['GET'])
 def listar_mantenimientos():
     mantenimientos = Mantenimiento.listar_json()
     return jsonify(mantenimientos)
