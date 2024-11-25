@@ -23,7 +23,7 @@ class Vehiculo(db.Model):
             'matricula': self.matricula,
             'id_traccar': self.id_traccar,
             'estado': self.estado,
-            'kilometraje': self.kilometraje
+            'kilometraje': self.kilometraje,
         }
 
     @staticmethod

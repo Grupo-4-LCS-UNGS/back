@@ -51,3 +51,9 @@ class Usuario(db.Model, UserMixin):
 
     def get_id(self):
         return str(self.id)  
+    
+    @staticmethod
+    def listar_json():
+        return [usuario.serialize() for usuario in Usuario.listar()]
+    
+    
