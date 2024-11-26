@@ -2,7 +2,8 @@ from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from extensiones import db
 from models.usuario import Usuario
-from models.posiciones_cliente import PosicionCliente
+from models.posiciones_clientes import PosicionCliente
+
 
 
 

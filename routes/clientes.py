@@ -4,7 +4,7 @@ from flask_jwt_extended import jwt_required,create_access_token
 from extensiones import db, bcrypt
 from models.cliente import Cliente
 from datetime import timedelta
-from models.posicionesgps_cliente import PosicionGPSCliente
+from models.posiciones_clientes import PosicionCliente
 
 clientes = Blueprint('clientes', __name__)
 posiciones = Blueprint('posiciones', __name__)
@@ -156,12 +156,12 @@ def agregar_posicion():
         return jsonify(error='ID Cliente, Latitud, Longitud y Nombre son obligatorios'), 400
 
     # Crear y guardar la posición
-    nueva_posicion = PosicionGPSCliente(
+    nueva_posicion = PosicionCliente(
         id_cliente=id_cliente,
         latitud=latitud,
         longitud=longitud,
         nombre=nombre
     )
-    PosicionGPSCliente.agregar(nueva_posicion)
+    PosicionCliente.agregar(nueva_posicion)
 
     return jsonify(nueva_posicion.serialize()), 201
