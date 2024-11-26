@@ -55,12 +55,8 @@ def agregar_cliente():
         id_operador=id_operador
     )
     Cliente.agregar(nuevo_cliente)
-    access_token = create_access_token(
-        identity=str(nuevo_cliente.id),  # Convertir a cadena
-        expires_delta=timedelta(hours=1),
-        additional_claims={"usuario_cliente": nuevo_cliente.usuario_cliente}
-    )
-    return jsonify(nuevo_cliente.serialize(), access_token=access_token), 201
+   
+    return jsonify(nuevo_cliente.serialize()), 201
 
 
 @clientes.route('/clientes/login', methods=['POST'])
