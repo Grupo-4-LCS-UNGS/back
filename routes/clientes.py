@@ -1,10 +1,13 @@
+from turtle import pos
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required,create_access_token
 from extensiones import db, bcrypt
 from models.cliente import Cliente
 from datetime import timedelta
+from models.posicionesgps_cliente import PosicionGPSCliente
 
 clientes = Blueprint('clientes', __name__)
+posiciones = Blueprint('posiciones', __name__)
 
 # Endpoint para listar todos los clientes
 @clientes.route('/clientes', methods=['GET'])
@@ -126,3 +129,39 @@ def actualizar_cliente(id):
 
     Cliente.actualizar()
     return jsonify(cliente.serialize()), 200
+
+
+
+# Endpoint para listar el cliente asignado a un id_operador
+@clientes.route('/clientes/operador/<int:id>', methods=['GET'])
+@jwt_required()
+def listar_clientes_operador(id):
+    clientes = Cliente.query.filter_by(id_operador=id).all()
+    return jsonify([cliente.serialize() for cliente in clientes]), 200
+
+
+# Endpoint para agregar una posicion a un cliente
+@posiciones.route('/posiciones', methods=['POST'])
+@jwt_required()
+def agregar_posicion():
+    data = request.json
+
+    id_cliente = data.get('id_cliente')
+    latitud = data.get('latitud')
+    longitud = data.get('longitud')
+    nombre = data.get('nombre')
+
+    # Validación básica de datos obligatorios
+    if not id_cliente or not latitud or not longitud or not nombre:
+        return jsonify(error='ID Cliente, Latitud, Longitud y Nombre son obligatorios'), 400
+
+    # Crear y guardar la posición
+    nueva_posicion = PosicionGPSCliente(
+        id_cliente=id_cliente,
+        latitud=latitud,
+        longitud=longitud,
+        nombre=nombre
+    )
+    PosicionGPSCliente.agregar(nueva_posicion)
+
+    return jsonify(nueva_posicion.serialize()), 201
