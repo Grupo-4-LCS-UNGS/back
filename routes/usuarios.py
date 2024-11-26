@@ -46,7 +46,7 @@ def login():
 
     # Genera el token JWT con el rol del usuario incluido en los claims adicionales
     access_token = create_access_token(
-        identity=personal.id, 
+        identity=str(personal.id), 
         expires_delta=timedelta(hours=1),
         additional_claims={"rol": personal.rol}  # Agrega el rol aquí
     )
@@ -77,3 +77,14 @@ def mi_perfil():
         "nombre": usuario.nombre,
         "rol": claims.get("rol") 
     }), 200
+    
+    
+    
+#Obtener listado de usuarios según rol
+@usuarios.route('/usuarios/<string:rol>', methods=['GET'])
+def listar_usuarios(rol):
+    usuariosDeRol = Usuario.query.filter_by(rol=rol).all()
+    if not usuariosDeRol:
+        return jsonify(error='No hay usuarios con ese rol'), 404
+    else:
+        return jsonify([usuario.serialize() for usuario in usuariosDeRol]), 200

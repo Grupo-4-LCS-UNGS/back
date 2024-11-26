@@ -55,6 +55,7 @@ def agregar_cliente():
         id_operador=id_operador
     )
     Cliente.agregar(nuevo_cliente)
+   
     return jsonify(nuevo_cliente.serialize()), 201
 
 
@@ -79,7 +80,7 @@ def login_cliente():
 
     # Generar token JWT
     access_token = create_access_token(
-        identity=cliente.id,
+        identity=str(cliente.id),  # Convertir a cadena
         expires_delta=timedelta(hours=1),
         additional_claims={"usuario_cliente": cliente.usuario_cliente}
     )

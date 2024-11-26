@@ -51,10 +51,11 @@ def cargar_mantenimiento():
     
     usuario = Usuario.buscarPorId(id_usuario)
 
-    vehiculo = Vehiculo.encontrarPorId(id_vehiculo)
-    vehiculo.estado = "En mantenimiento"
-    vehiculo.operador = usuario
-    Vehiculo.actualizar()
+    if fin is not None:
+        vehiculo = Vehiculo.encontrarPorId(id_vehiculo)
+        vehiculo.estado = "En mantenimiento"
+        vehiculo.operador = usuario
+        Vehiculo.actualizar()
     
     current_app.logger.info('Vehiculo de form:')
     current_app.logger.debug(data['id_vehiculo'])
@@ -130,7 +131,7 @@ def finalizar_mantenimiento(id):
     mantenimiento.fecha_fin = datetime.now()
     mantenimiento.estado = 'finalizado'
     
-    vehiculo = Vehiculo.encontrarPorId(mantenimiento.id_vehiculo)
+    vehiculo = Vehiculo.encontrarPorId(mantenimiento.vehiculo)
     vehiculo.estado = "Disponible"
     vehiculo.operador = None
     Vehiculo.actualizar()

@@ -25,7 +25,7 @@ class Cliente(db.Model):
             'telefono': self.telefono,
             'usuario_cliente': self.usuario_cliente,
             'contrasena': self.contrasena,
-            'operador': self.operador if self.operador else None
+            'operador': self.operador.serialize() if self.operador else None
         }
 
     @staticmethod

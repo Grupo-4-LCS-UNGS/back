@@ -57,3 +57,8 @@ class Usuario(db.Model, UserMixin):
         return [usuario.serialize() for usuario in Usuario.listar()]
     
     
+    @staticmethod
+    def obtenerPorRol(rol):
+        return Usuario.query.filter_by(rol=rol).all()
+    
+    
