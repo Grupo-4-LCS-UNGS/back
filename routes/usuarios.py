@@ -46,7 +46,7 @@ def login():
 
     # Genera el token JWT con el rol del usuario incluido en los claims adicionales
     access_token = create_access_token(
-        identity=personal.id, 
+        identity=str(personal.id), 
         expires_delta=timedelta(hours=1),
         additional_claims={"rol": personal.rol}  # Agrega el rol aquí
     )
