@@ -141,7 +141,7 @@ def listar_clientes_operador(id):
 
 
 # Endpoint para agregar una posicion a un cliente
-@posiciones.route('/posiciones', methods=['POST'])
+@clientes.route('/posiciones', methods=['POST'])
 @jwt_required()
 def agregar_posicion():
     data = request.json
@@ -168,7 +168,7 @@ def agregar_posicion():
 
 
 # Endpoint para listar todas las posiciones que pertenecen a un cliente
-@posiciones.route('/posiciones/cliente/<int:id>', methods=['GET'])
+@clientes.route('/posiciones/cliente/<int:id>', methods=['GET'])
 @jwt_required()
 def listar_posiciones_cliente(id):
     posiciones = PosicionCliente.query.filter_by(id_cliente=id).all()
