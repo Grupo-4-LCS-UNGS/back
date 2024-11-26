@@ -15,7 +15,7 @@ def alta_modelo():
     return 'OK', 202
 
 @modelos_vehiculos.route('/modelos_vehiculos/<int:id>', methods=['PUT'])
-def actualizar_marca(id):
+def actualizar_modelo(id):
     modelo = ModeloVehiculo.encontrarPorId(id)
     if modelo == None:
         return 'Modelo no encontrada', 404
