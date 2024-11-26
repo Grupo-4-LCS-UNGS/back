@@ -4,10 +4,834 @@ info:
   description: API para gestionar una flota de vehículos.
   version: 1.0.0
 paths:
+  /vehiculos:
+    get:
+      summary: Listar Vehículos
+      description: Obtiene una lista de todos los vehículos registrados.
+      tags:
+        - Vehículos
+      responses:
+        '200':
+          description: Lista de vehículos.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/VehiculoResponse'
+
+  /vehiculos/{id}:
+    get:
+      summary: Obtener vehículo por ID
+      tags:
+        - Vehículos
+      parameters:
+        - in: path
+          name: id
+          required: true
+          type: integer
+      responses:
+        '200':
+          description: Vehículo encontrado
+          schema:
+            $ref: '#/definitions/VehiculoResponse'
+        '404':
+          description: Vehículo no encontrado
+
+  /vehiculos/alta:
+    post:
+      summary: Agregar vehículo
+      description: Registra un nuevo vehículo en el sistema.
+      tags:
+        - Vehículos
+      parameters:
+        - in: body
+          name: body
+          description: Datos del nuevo vehículo.
+          required: true
+          schema:
+            $ref: '#/definitions/VehiculoRequest'
+      responses:
+        '202':
+          description: vehículo creado.
+
+  /vehiculos/mod:
+    put:
+      summary: Actualizar vehículo
+      description: Actualiza la información de un vehículo específico por su ID.
+      tags:
+        - Vehículos
+      parameters:
+        - in: path
+          name: id
+          required: true
+          type: integer
+        - in: body
+          name: body
+          description: Datos actualizados del vehículo.
+          required: true
+          schema:
+            $ref: '#/definitions/VehiculoResponse'
+      responses:
+        '200':
+          description: Vehiculo actualizado.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/VehiculoResponse'
+        '404':
+          description: Vehículo no encontrado.
+
+  /vehiculos/baja:
+    get:
+      summary: Eliminar vehículo
+      description: Elimina un vehículo específico por su ID
+      tags:
+        - Vehículos
+      parameters:
+        - in: formData
+          name: id
+          required: true
+          type: integer
+      responses:
+        '202':
+          description: Vehículo eliminado.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/VehiculoResponse'
+  /signin:
+    post:
+      summary: Crear nuevo usuario
+      description: Permite crear un nuevo usuario con nombre, contraseña y rol.
+      tags:
+        - Usuarios
+      parameters:
+        - in: formData
+          name: nombre
+          required: true
+          type: string
+        - in: formData
+          name: contrasena
+          required: true
+          type: string
+        - in: formData
+          name: rol
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Usuario creado.
+          schema:
+            type: object
+            properties:
+              id:
+                type: integer
+              estado:
+                type: integer
+                description: Código de estado HTTP (200 para éxito).
+        '400':
+          description: Datos inválidos o usuario ya registrado.
+
+  /login:
+    post:
+      summary: Iniciar sesión de usuario
+      description: Permite a un usuario iniciar sesión con nombre y contraseña
+      tags:
+        - Usuarios
+      parameters:
+        - in: formData
+          name: nombre
+          required: true
+          type: string
+        - in: formData
+          name: contrasena
+          required: true
+          type: string
+          description: Contraseña del usuario.
+      responses:
+        '200':
+          description: Login exitoso, devuelve el token JWT.
+          schema:
+            type: object
+            properties:
+              access_token:
+                type: string
+                description: Token JWT de acceso.
+              id:
+                type: integer
+              nombre:
+                type: string
+              rol:
+                type: string
+              estado:
+                type: integer
+                description: Código de estado HTTP (200 para éxito).
+        '400':
+          description: Credenciales incorrectas o formato inválido.
+
+  /logout:
+    get:
+      summary: Cerrar sesión
+      description: Permite a un usuario cerrar sesión eliminando su información de sesión.
+      tags:
+        - Usuarios
+      responses:
+        '200':
+          description: Logout exitoso, la sesión se elimina.
+
+  /mi_perfil:
+    get:
+      summary: Ver perfil de usuario
+      description: Permite a un usuario autenticado ver su información de perfil (nombre y rol).
+      tags:
+        - Usuarios
+      security:
+        - jwt: []
+      responses:
+        '200':
+          description: Información del perfil del usuario.
+          schema:
+            type: object
+            properties:
+              nombre:
+                type: string
+              rol:
+                type: string
+        '404':
+          description: Usuario no encontrado o no autorizado.
+
+  /clientes:
+    get:
+      summary: Listar Clientes
+      description: Obtiene una lista de todos los clientes registrados.
+      tags:
+        - Clientes
+      responses:
+        '200':
+          description: Lista de clientes.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ClienteResponse'
+
+    post:
+      summary: Agregar Cliente
+      description: Registra un nuevo cliente en el sistema.
+      tags:
+        - Clientes
+      parameters:
+        - in: body
+          name: body
+          description: Datos del nuevo cliente.
+          required: true
+          schema:
+            $ref: '#/definitions/ClienteRequest'
+      responses:
+        '201':
+          description: Cliente creado.
+          schema:
+            $ref: '#/definitions/ClienteResponse'
+        '400':
+          description: Error de validación o datos duplicados.
+        '500':
+          description: Error en el servidor.
+
+  /clientes/login:
+    post:
+      summary: Login de Cliente
+      description: Permite al cliente iniciar sesión.
+      tags:
+        - Clientes
+      parameters:
+        - in: body
+          name: body
+          description: Datos de inicio de sesión del cliente.
+          required: true
+          schema:
+            type: object
+            properties:
+              usuario_cliente:
+                type: string
+              contrasena:
+                type: string
+      responses:
+        '200':
+          description: Token JWT generado exitosamente.
+          schema:
+            type: object
+            properties:
+              access_token:
+                type: string
+                description: Token de acceso JWT.
+              id:
+                type: integer
+                description: ID del cliente.
+              nombre:
+                type: string
+                description: Nombre del cliente.
+        '400':
+          description: Usuario y/o contraseña requeridos.
+        '401':
+          description: Credenciales incorrectas.
+
+  /clientes/{id}:
+    delete:
+      summary: Eliminar Cliente
+      description: Elimina un cliente específico por su ID.
+      tags:
+        - Clientes
+      parameters:
+        - in: path
+          name: id
+          required: true
+          type: integer
+      responses:
+        '200':
+          description: Cliente eliminado.
+        '404':
+          description: Cliente no encontrado.
+
+    put:
+      summary: Actualizar Cliente
+      description: Actualiza la información de un cliente específico por su ID.
+      tags:
+        - Clientes
+      parameters:
+        - in: path
+          name: id
+          required: true
+          type: integer
+        - in: body
+          name: body
+          description: Datos del cliente a actualizar.
+          required: true
+          schema:
+            $ref: '#/definitions/ClienteRequest'
+      responses:
+        '200':
+          description: Cliente actualizado.
+          schema:
+            $ref: '#/definitions/ClienteResponse'
+        '404':
+          description: Cliente no encontrado.
+        '400':
+          description: Datos incompletos o inválidos.
+
+  /asignacion:
+    post:
+      summary: Asignar Operador a Vehículo
+      description: Asigna un operador a un vehículo y registra la asignación en la bitácora.
+      tags:
+        - Asignación Operador
+      parameters:
+        - in: formData
+          name: id_vehiculo
+          required: true
+          type: integer
+        - in: formData
+          name: id_usuario
+          description: ID del usuario (operador) a asignar al vehículo.
+          required: true
+          type: integer
+      responses:
+        '201':
+          description: Operación exitosa, asignación registrada en la bitácora.
+          schema:
+            $ref: '#/definitions/BitacoraAsignacionesResponse'
+        '404':
+          description: Vehículo o usuario no encontrado.
+        '500':
+          description: Error al obtener la información de la posición o al registrar la asignación.
+
+  /desasignacion:
+      post:
+        summary: Desasignar Operador de Vehículo
+        description: Desasigna un operador de un vehículo y actualiza la bitácora con la fecha y distancia final.
+        tags:
+          - Asignación Operador
+        parameters:
+          - in: formData
+            name: id_asignacion
+            required: true
+            type: integer
+        responses:
+          '201':
+            description: Operación exitosa, desasignación registrada en la bitácora.
+            schema:
+              $ref: '#/definitions/BitacoraAsignacionesResponse'
+          '404':
+            description: Asignación no encontrada.
+          '500':
+            description: Error al obtener la información de la posición o al registrar la desasignación.
+
+  /asignaciones:
+    get:
+      summary: Listar Asignaciones
+      description: Obtiene todas las asignaciones registradas en la bitácora.
+      tags:
+        - Asignación Operador
+      responses:
+        '200':
+          description: Lista de asignaciones.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/BitacoraAsignacionesResponse'
+
+  /asignaciones_repuestos/:
+    get:
+      summary: Listar todas las asignaciones de repuestos.
+      description: Devuelve una lista de todas las asignaciones de repuestos.
+      tags:
+        - Asignaciones de repuestos
+      responses:
+        200:
+          description: Lista de asignaciones.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/AsignacionRepuestosResponse'
+    post:
+      summary: Crear una nueva asignación de repuestos.
+      description: Crea una nueva asignación de repuestos para un mantenimiento.
+      tags:
+        - Asignaciones de repuestos
+      parameters:
+        - in: body
+          name: body
+          description: Datos de la nueva asignación de repuestos.
+          required: true
+          schema:
+            $ref: '#/definitions/MantenimientoRequest'
+      responses:
+        202:
+          description: Asignación creada exitosamente.
+
+  /asignaciones_repuestos/por_mantenimiento/{id}:
+    get:
+      summary: Listar asignaciones de repuestos por mantenimiento.
+      description: Devuelve una lista de asignaciones de repuestos asociadas a un mantenimiento específico.
+      tags:
+        - Asignaciones de repuestos
+      parameters:
+        - in: path
+          name: id
+          required: true
+          type: integer
+      responses:
+        200:
+          description: Lista de asignaciones.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/AsignacionRepuestosResponse'
+        404:
+          description: No se encontraron asignaciones para el mantenimiento especificado.
+
+  /asignaciones_repuestos/{id}:
+    delete:
+      summary: Eliminar una asignación de repuestos.
+      description: Elimina una asignación de repuestos por su ID.
+      tags:
+        - Asignaciones de repuestos
+      parameters:
+        - in: path
+          name: id
+          required: true
+          type: integer
+      responses:
+        202:
+          description: Asignación eliminada.
+        404:
+          description: Asignación no encontrada.
+
+  /mantenimientos:
+    get:
+      summary: Listar mantenimientos
+      description: Obtiene una lista de todos los mantenimientos registrados en el sistema.
+      tags:
+        - Mantenimientos
+      responses:
+        '200':
+          description: Lista de mantenimientos.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/MantenimientoResponse'
+
+  /mantenimientos/alta:
+    post:
+      summary: Crear un mantenimiento
+      description: Crea un nuevo registro de mantenimiento y actualiza el estado del vehículo y los repuestos.
+      tags:
+        - Mantenimientos
+      parameters:
+        - in: body
+          name: body
+          description: Datos del mantenimiento a registrar.
+          required: true
+          schema:
+            $ref: '#/definitions/MantenimientoRequest'
+      responses:
+        '201':
+          description: Mantenimiento registrado.
+          schema:
+            $ref: '#/definitions/MantenimientoResponse'
+        '400':
+          description: Error en los datos o en el registro.
+
+  /mantenimientos/{id}:
+    get:
+      summary: Historial de mantenimientos por vehículo
+      description: Lista los mantenimientos realizados en un vehículo específico.
+      tags:
+        - Mantenimientos
+      parameters:
+        - in: path
+          name: id
+          required: true
+          type: integer
+      responses:
+        '200':
+          description: Lista de mantenimientos asociados al vehículo.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/MantenimientoResponse'
+        '404':
+          description: No se encontraron mantenimientos para el vehículo.
+
+  /mantenimientos/finalizar/{id}:
+    get:
+      summary: Finalizar mantenimiento
+      description: Finaliza un mantenimiento y libera el vehículo asociado.
+      tags:
+        - Mantenimientos
+      parameters:
+        - in: path
+          name: id
+          required: true
+          type: integer
+      responses:
+        '202':
+          description: Mantenimiento finalizado.
+        '404':
+          description: Mantenimiento no encontrado.
+
+  /bitacora/clientes/:
+    get:
+      summary: Listar Bitácora de Clientes
+      description: Obtiene una lista de todas las asignaciones registradas en la bitácora de clientes.
+      tags:
+        - Bitácora de clientes
+      responses:
+        '200':
+          description: Lista de asignaciones en la bitácora.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/BitacoraClienteResponse'
+
+  /bitacora/clientes/{id}:
+    delete:
+      summary: Eliminar asignación de la bitácora
+      description: Elimina una asignación específica de la bitácora de clientes por su ID.
+      tags:
+        - Bitácora de clientes
+      parameters:
+        - in: path
+          name: id
+          required: true
+          type: integer
+      responses:
+        '202':
+          description: Asignación eliminada.
+        '404':
+          description: Asignación no encontrada.
+
+  /modelos_vehiculos/:
+    get:
+      summary: Listar Modelos de Vehículos
+      description: Obtiene una lista de todos los modelos de vehículos registrados.
+      tags:
+        - Modelos de vehículos
+      responses:
+        '200':
+          description: Lista de modelos de vehículos.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ModeloVehiculoResponse'
+
+    post:
+      summary: Crear Modelo de Vehículo
+      description: Registra un nuevo modelo de vehículo.
+      tags:
+        - Modelos de vehículos
+      parameters:
+        - in: body
+          name: body
+          description: Datos del nuevo modelo de vehículo.
+          required: true
+          schema:
+            $ref: '#/definitions/ModeloVehiculoRequest'
+      responses:
+        '202':
+          description: Modelo de vehículo creado.
+
+
+  /modelos_vehiculos/marca/{id_marca}:
+    get:
+      summary: Obtener Modelos por Marca
+      description: Obtiene una lista de modelos de vehículos asociados a una marca específica.
+      tags:
+        - Modelos de vehículos
+      parameters:
+        - in: path
+          name: id_marca
+          required: true
+          type: integer
+      responses:
+        '200':
+          description: Lista de modelos de vehículos asociados a la marca.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ModeloVehiculoResponse'
+        '404':
+          description: No se encontraron modelos para la marca especificada.
+
+  /modelos_vehiculos/{id}:
+    put:
+      summary: Actualizar Modelo de Vehículo
+      description: Actualiza los datos de un modelo de vehículo específico por su ID.
+      tags:
+        - Modelos de vehículos
+      parameters:
+        - in: path
+          name: id
+          required: true
+          type: integer
+        - in: body
+          name: body
+          description: Datos actualizados del modelo de vehículo.
+          required: true
+          schema:
+            $ref: '#/definitions/ModeloVehiculoRequest'
+      responses:
+        '202':
+          description: Modelo de vehículo actualizado.
+        '404':
+          description: Modelo de vehículo no encontrado.
+
+  /marcas_vehiculos/:
+    get:
+      summary: Listar Marcas de Vehículos
+      description: Obtiene una lista de todas las marcas de vehículos registradas.
+      tags:
+        - Marcas de vehículos
+      responses:
+        '200':
+          description: Lista de marcas de vehículos.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/MarcaVehiculoResponse'
+
+    post:
+      summary: Crear Marca de Vehículo
+      description: Registra una nueva marca de vehículo.
+      tags:
+        - Marcas de vehículos
+      parameters:
+        - in: body
+          name: body
+          description: Datos de la nueva marca de vehículo.
+          required: true
+          schema:
+            $ref: '#/definitions/MarcaVehiculoRequest'
+      responses:
+        '200':
+          description: Marca de vehículo registrada.
+
+  /marcas_vehiculos/{id}:
+    put:
+      summary: Actualizar Marca de Vehículo
+      description: Actualiza los datos de una marca de vehículo específica por su ID.
+      tags:
+        - Marcas de vehículos
+      parameters:
+        - in: path
+          name: id
+          required: true
+          type: integer
+        - in: body
+          name: body
+          description: Datos actualizados de la marca de vehículo.
+          required: true
+          schema:
+            $ref: '#/definitions/MarcaVehiculoRequest'
+      responses:
+        '200':
+          description: Marca de vehículo actualizada.
+        '404':
+          description: Marca de vehículo no encontrada.
+
+  /ordenes_compras/:
+    get:
+      summary: Listar Órdenes de Compra
+      description: Obtiene una lista de todas las órdenes de compra.
+      tags:
+        - Órdenes de compra
+      responses:
+        '202':
+          description: Lista de órdenes de compra.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/OrdenCompraResponse'
+
+    post:
+      summary: Crear Orden de Compra
+      description: Crea una nueva orden de compra en el sistema.
+      tags:
+        - Órdenes de compra
+      parameters:
+        - in: body
+          name: body
+          description: Datos de la nueva orden de compra.
+          required: true
+          schema:
+            $ref: '#/definitions/OrdenCompraRequest'
+      responses:
+        '202':
+          description: Orden de compra creada.
+
+  /ordenes_compras/{id}:
+    delete:
+      summary: Eliminar Orden de Compra
+      description: Elimina una orden de compra específica por su ID.
+      tags:
+        - Órdenes de compra
+      parameters:
+        - in: path
+          name: id
+          required: true
+          type: integer
+      responses:
+        '202':
+          description: Orden de compra eliminada correctamente.
+        '404':
+          description: Orden de compra no encontrada.
+
+  /ordenes_compras/recibida/{id}:
+    put:
+      summary: Informar Recepción de Orden
+      description: Marca como recibida una orden de compra específica por su ID.
+      tags:
+        - Órdenes de compra
+      parameters:
+        - in: path
+          name: id
+          required: true
+          type: integer
+      responses:
+        '202':
+          description: Orden de compra marcada como recibida.
+        '404':
+          description: Orden de compra no encontrada.
+
+  /precios/:
+    get:
+      summary: Lista todos los precios de repuestos.
+      description: Obtiene una lista de todos los precios registrados.
+      tags:
+        - Precios
+      responses:
+        '202':
+          description: Lista de precios de precios.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/PreciosRepuestoResponse'
+
+    post:
+      summary: Agregar Precio de Repuesto
+      description: Registra un nuevo precio de repuesto en el sistema.
+      tags:
+        - Precios
+      parameters:
+        - in: body
+          name: body
+          description: Datos del nuevo precio de repuesto.
+          required: true
+          schema:
+            $ref: '#/definitions/PreciosRepuestoRequest'
+      responses:
+        '202':
+          description: 'Precio creado'
+        '404':
+          description: 'Error'
+
+  /precios/{id_proveedor}/{id_repuesto}/:
+    put:
+      summary: Actualizar Precio de Repuesto
+      description: Actualiza la información del precio de un repuesto específico por su ID de proveedor y repuesto.
+      tags:
+        - Precios
+      parameters:
+        - in: path
+          name: id_proveedor
+          required: true
+          type: integer
+        - in: path
+          name: id_repuesto
+          required: true
+          type: integer
+        - in: body
+          name: body
+          description: Nuevo costo del repuesto.
+          required: true
+          schema:
+            type: object
+            properties:
+              costo:
+                type: number
+                format: float
+                description: El nuevo costo del repuesto.
+            required:
+              - costo
+      responses:
+        '202':
+          description: Precio de repuesto actualizado.
+        '404':
+          description: Precio de repuesto no encontrado o error con proveedor/repuesto.
+
+    delete:
+      summary: Eliminar Precio de Repuesto
+      description: Elimina un precio específico de repuesto basado en los IDs del proveedor y repuesto.
+      tags:
+        - Precios
+      parameters:
+        - in: path
+          name: id_proveedor
+          required: true
+          type: integer
+        - in: path
+          name: id_repuesto
+          required: true
+          type: integer
+      responses:
+        '202':
+          description: Precio de repuesto eliminado.
+        '404':
+          description: Precio de repuesto no encontrado.
+
   /proveedores/:
     get:
       summary: Listar Proveedores
       description: Obtiene una lista de todos los proveedores registrados.
+      tags:
+        - Proveedores
       responses:
         '202':
           description: Lista de repuestos.
@@ -15,9 +839,12 @@ paths:
             type: array
             items:
               $ref: '#/definitions/ProveedorResponse'
+
     post:
-      summary: Alta de Proveedor
+      summary: Crear Proveedor
       description: Registra un nuevo proveedor en el sistema.
+      tags:
+        - Proveedores
       parameters:
         - in: body
           name: body
@@ -27,12 +854,14 @@ paths:
             $ref: '#/definitions/ProveedorRequest'
       responses:
         '202':
-          description: 'OK'
+          description: 'Proveedor creado'
 
   /proveedores/{id}:
     put:
       summary: Actualizar Proveedor
       description: Actualiza la información de un proveedor existente por su ID.
+      tags:
+        - Proveedores
       parameters:
         - in: path
           name: id
@@ -46,13 +875,15 @@ paths:
             $ref: '#/definitions/ProveedorRequest'
       responses:
         '202':
-          description: OK
+          description: Proveedor actualizado.
         '404':
           description: Proveedor no encontrado.
 
     delete:
-      summary: Baja de Proveedor
+      summary: Eliminar Proveedor
       description: Elimina un proveedor específico por su ID.
+      tags:
+        - Proveedores
       parameters:
         - in: path
           name: id
@@ -60,7 +891,7 @@ paths:
           type: integer
       responses:
         '202':
-          description: OK
+          description: Proveedor eliminado.
         '400':
           description: Proveedor no encontrado.
 
@@ -68,6 +899,8 @@ paths:
     get:
       summary: Listar Repuestos
       description: Obtiene una lista de todos los repuestos registrados.
+      tags:
+        - Repuestos
       responses:
         '202':
           description: Lista de repuestos.
@@ -77,8 +910,10 @@ paths:
               $ref: '#/definitions/RepuestoResponse'
 
     post:
-      summary: Alta de Repuesto
+      summary: Crear Repuesto
       description: Registra un nuevo repuesto en el sistema.
+      tags:
+        - Repuestos
       parameters:
         - in: body
           name: body
@@ -88,14 +923,14 @@ paths:
             $ref: '#/definitions/RepuestoRequest'
       responses:
         '202':
-          description: Repuesto creado exitosamente.
-        '400':
-          description: Error al registrar el repuesto.
+          description: Repuesto creado.
 
   /repuestos/{id}:
     get:
       summary: Obtener Repuesto por ID
       description: Obtiene la información de un repuesto específico a través de su ID.
+      tags:
+        - Repuestos
       parameters:
         - in: path
           name: id
@@ -110,8 +945,10 @@ paths:
           description: Repuesto no encontrado.
 
     delete:
-      summary: Baja de Repuesto
+      summary: Eliminar Repuesto
       description: Elimina un repuesto específico por su ID.
+      tags:
+        - Repuestos
       parameters:
         - in: path
           name: id
@@ -119,7 +956,7 @@ paths:
           type: integer
       responses:
         '202':
-          description: OK
+          description: Repuesto Eliminado.
         '400':
           description: Repuesto no encontrado.
 
@@ -127,6 +964,8 @@ paths:
     get:
       summary: Obtener Repuestos por Modelo
       description: Obtiene una lista de repuestos asociados a un modelo específico de vehículo.
+      tags:
+        - Repuestos
       parameters:
         - in: path
           name: id_modelo
@@ -143,6 +982,12 @@ paths:
         '404':
           description: Modelo no encontrado.
 
+securityDefinitions:
+  jwt:
+    type: apiKey
+    in: header
+    name: Authorization
+
 definitions:
   VehiculoRequest:
     type: object
@@ -151,6 +996,11 @@ definitions:
         type: integer
       matricula:
         type: string
+      id_traccar:
+        type: integer
+        description: ID registrado en la API de geoposicionamiento.
+      kilometraje:
+        type: integer
     required:
       - id_modelo
       - matricula
@@ -298,6 +1148,8 @@ definitions:
         type: string
       cuit:
         type: string
+      email:
+        type: string
 
   ProveedorResponse:
     type: object
@@ -308,7 +1160,234 @@ definitions:
         type: string
       direccion:
         type: string
+        format: email
       telefono:
         type: string
       cuit:
         type: string
+      email:
+        type: string
+
+  PreciosRepuestoRequest:
+    type: object
+    properties:
+      id_proveedor:
+        type: integer
+      id_repuesto:
+        type: integer
+      costo:
+        type: number
+        format: float
+    required:
+      - id_proveedor
+      - id_repuesto
+      - costo
+
+  PreciosRepuestoResponse:
+    type: object
+    properties:
+      id:
+        type: integer
+      costo:
+        type: number
+        format: float
+        description: Costo del repuesto ofrecido por el proveedor.
+      proveedor:
+        $ref: '#/definitions/ProveedorResponse'
+      repuesto:
+        $ref: '#/definitions/RepuestoResponse'
+
+  OrdenCompraRequest:
+    type: object
+    properties:
+      cantidad:
+        type: integer
+      id_precio:
+        type: integer
+      total:
+        type: integer
+
+  OrdenCompraResponse:
+    type: object
+    properties:
+      id:
+        type: integer
+      cantidad:
+        type: integer
+      estado:
+        type: string
+      fecha_recepcion:
+        type: string
+        format: date-time
+      fecha_creacion:
+        type: string
+        format: date-time
+      total:
+        type: number
+        format: float
+      PreciosRepuesto:
+        $ref: '#/definitions/PreciosRepuestoResponse'
+
+  BitacoraClienteResponse:
+    type: object
+    properties:
+      id:
+        type: integer
+      fecha_hora_asignacion:
+        type: string
+        format: date-time
+      fecha_hora_desasignacion:
+        type: string
+        format: date-time
+      cliente:
+        $ref: '#/definitions/ClienteResponse'
+      operador:
+        $ref: '#/definitions/UsuarioResponse'
+      vehiculo:
+        $ref: '#/definitions/VehiculoResponse'
+
+  ClienteRequest:
+    type: object
+    properties:
+      cuit:
+        type: string
+      nombre:
+        type: string
+      direccion:
+        type: string
+      email:
+        type: string
+        format: email
+      telefono:
+        type: string
+      usuario_cliente:
+        type: string
+        description: Nombre de usuario asignado al cliente.
+      contrasena:
+        type: string
+        description: Contraseña del cliente.
+
+  ClienteResponse:
+    type: object
+    properties:
+      id:
+        type: integer
+      cuit:
+        type: string
+      nombre:
+        type: string
+      direccion:
+        type: string
+      email:
+        type: string
+        format: email
+      telefono:
+        type: string
+      usuario_cliente:
+        type: string
+        description: Nombre de usuario asignado al cliente.
+      contrasena:
+        type: string
+        description: Contraseña del cliente.
+      operador:
+        $ref: '#/definitions/UsuarioResponse'
+
+  MantenimientoResponse:
+    type: object
+    properties:
+      id:
+        type: integer
+      fecha_inicio:
+        type: string
+        format: date
+      fecha_fin:
+        type: string
+        format: date
+      tipo:
+        type: string
+      vehiculo:
+        $ref: '#/definitions/VehiculoResponse'
+
+  MantenimientoRequest:
+    type: object
+    properties:
+      id_vehiculo:
+        type: integer
+      tipo:
+        type: string
+      fecha_inicio:
+        type: string
+        format: date-time
+      fecha_fin:
+        type: string
+        format: date-time
+      id_usuario:
+        type: integer
+      repuestos:
+        type: array
+        description: Lista de repuestos asignados.
+        items:
+          $ref: '#/definitions/RepuestoResponse'
+    required:
+      - id_vehiculo
+      - tipo
+      - fecha_inicio
+      - id_usuario
+      - repuestos
+
+  AsignacionRepuestosResponse:
+    type: object
+    properties:
+      id:
+        type: integer
+      cantidad:
+        type: integer
+        description: Cantidad de repuestos asignados.
+      fecha:
+        type: string
+        format: date
+      mantenimiento:
+        $ref: '#/definitions/MantenimientoResponse'
+      repuesto:
+        $ref: '#/definitions/RepuestoResponse'
+
+  AsignacionRepuestosRequest:
+    type: object
+    properties:
+      id_mantenimiento:
+        type: integer
+      id_repuesto:
+        type: integer
+      cantidad:
+        type: integer
+        description: Cantidad de repuestos asignados.
+    required:
+      - id_mantenimiento
+      - id_repuesto
+      - cantidad
+
+  BitacoraAsignacionesResponse:
+    type: object
+    properties:
+      id:
+        type: integer
+        description: Identificador único de la bitácora.
+      fecha_hora_asignacion:
+        type: string
+        format: date-time
+      fecha_hora_desasignacion:
+        type: string
+        format: date-time
+      distancia_inicial:
+        type: number
+        format: float
+      distancia_final:
+        type: number
+        format: float
+      distancia_recorrida:
+        type: number
+        format: float
+      vehiculo:
+        $ref: '#/definitions/VehiculoResponse'
+      usuario:
+        $ref: '#/definitions/UsuarioResponse'
