@@ -82,7 +82,6 @@ def mi_perfil():
     
 #Obtener listado de usuarios según rol
 @usuarios.route('/usuarios/<string:rol>', methods=['GET'])
-@jwt_required()
 def listar_usuarios(rol):
     usuariosDeRol = Usuario.query.filter_by(rol=rol).all()
     if not usuariosDeRol:
