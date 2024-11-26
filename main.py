@@ -18,6 +18,7 @@ from routes.repuestos import repuestos
 from routes.clientes import clientes
 from routes.PreciosRepuesto import precios_repuesto_bp
 
+
 from setup import crearTriggers
 from config import Config
 from dotenv import load_dotenv

@@ -165,3 +165,11 @@ def agregar_posicion():
     PosicionCliente.agregar(nueva_posicion)
 
     return jsonify(nueva_posicion.serialize()), 201
+
+
+# Endpoint para listar todas las posiciones que pertenecen a un cliente
+@posiciones.route('/posiciones/cliente/<int:id>', methods=['GET'])
+@jwt_required()
+def listar_posiciones_cliente(id):
+    posiciones = PosicionCliente.query.filter_by(id_cliente=id).all()
+    return jsonify([posicion.serialize() for posicion in posiciones]), 200

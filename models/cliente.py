@@ -2,7 +2,7 @@ from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from extensiones import db
 from models.usuario import Usuario
-from models.posiciones_clientes import PosicionCliente
+
 
 
 
@@ -18,7 +18,7 @@ class Cliente(db.Model):
     usuario_cliente:    Mapped[str] = mapped_column(nullable=True)
     contrasena: Mapped[str] = mapped_column(nullable=True)
     operador:   Mapped['Usuario'] = relationship('Usuario', backref='cliente'),
-    posiciones: Mapped['PosicionCliente'] = relationship('PosicionCliente', backref='cliente')
+
 
 
     def serialize(self):
@@ -32,7 +32,6 @@ class Cliente(db.Model):
             'usuario_cliente': self.usuario_cliente,
             'contrasena': self.contrasena,
             'operador': self.operador.serialize() if self.operador else None,
-            'posiciones': [posicion.serialize() for posicion in self.posiciones]
         }
 
     @staticmethod
