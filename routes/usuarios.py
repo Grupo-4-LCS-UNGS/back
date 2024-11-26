@@ -77,3 +77,15 @@ def mi_perfil():
         "nombre": usuario.nombre,
         "rol": claims.get("rol") 
     }), 200
+    
+    
+    
+#Obtener listado de usuarios según rol
+@usuarios.route('/usuarios/<string:rol>', methods=['GET'])
+@jwt_required()
+def listar_usuarios(rol):
+    usuariosDeRol = Usuario.query.filter_by(rol=rol).all()
+    if not usuariosDeRol:
+        return jsonify(error='No hay usuarios con ese rol'), 404
+    else:
+        return jsonify([usuario.serialize() for usuario in usuariosDeRol]), 200
