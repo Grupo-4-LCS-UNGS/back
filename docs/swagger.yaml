@@ -92,11 +92,58 @@ paths:
           required: true
           type: integer
       responses:
-        '202':
+        '200':
           description: Vehículo eliminado.
           schema:
             type: array
             items:
+              $ref: '#/definitions/VehiculoResponse'
+
+  /vehiculos/estado:
+    put:
+      summary: Cambiar el estado de un vehículo
+      description: Permite actualizar el estado de un vehículo en el sistema mediante su patente.
+      tags:
+        - Vehículos
+      parameters:
+        - name: patente
+          in: formData
+          required: true
+          type: string
+        - name: estado
+          in: formData
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Estado actualizado.
+          schema:
+              $ref: '#/definitions/VehiculoResponse'
+
+  /vehiculos/estadoXid:
+    put:
+      summary: Cambiar el estado por ID
+      description: Permite actualizar el estado de un vehículo en el sistema mediante su ID.
+      tags:
+        - Vehículos
+      parameters:
+        - name: id
+          in: formData
+          required: true
+          type: integer
+        - name: estado
+          in: formData
+          required: true
+          type: string
+        - name: operador
+          in: formData
+          description: ID del operador.
+          required: true
+          type: integer
+      responses:
+        '200':
+          description: Estado actualizado.
+          schema:
               $ref: '#/definitions/VehiculoResponse'
   /signin:
     post:
