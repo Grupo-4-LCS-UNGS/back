@@ -134,7 +134,7 @@ def actualizar_cliente(id):
 
 # Endpoint para listar el cliente asignado a un id_operador
 @clientes.route('/clientes/operador/<int:id>', methods=['GET'])
-@jwt_required()
+
 def listar_clientes_operador(id):
     clientes = Cliente.query.filter_by(id_operador=id).all()
     return jsonify([cliente.serialize() for cliente in clientes]), 200
@@ -169,7 +169,7 @@ def agregar_posicion():
 
 # Endpoint para listar todas las posiciones que pertenecen a un cliente
 @clientes.route('/posiciones/cliente/<int:id>', methods=['GET'])
-@jwt_required()
+
 def listar_posiciones_cliente(id):
     posiciones = PosicionCliente.query.filter_by(id_cliente=id).all()
     return jsonify([posicion.serialize() for posicion in posiciones]), 200
