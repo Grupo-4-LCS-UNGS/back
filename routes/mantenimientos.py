@@ -50,9 +50,10 @@ def cargar_mantenimiento():
     #repuestos = request.form['repuestos']
     
     usuario = Usuario.buscarPorId(id_usuario)
+    vehiculo = Vehiculo.encontrarPorId(id_vehiculo)
 
     if fin is not None:
-        vehiculo = Vehiculo.encontrarPorId(id_vehiculo)
+        
         vehiculo.estado = "En mantenimiento"
         vehiculo.operador = usuario
         Vehiculo.actualizar()
