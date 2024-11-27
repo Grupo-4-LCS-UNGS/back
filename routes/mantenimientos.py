@@ -52,8 +52,7 @@ def cargar_mantenimiento():
     usuario = Usuario.buscarPorId(id_usuario)
     vehiculo = Vehiculo.encontrarPorId(id_vehiculo)
 
-    if fin is not None:
-        
+    if fin is None:
         vehiculo.estado = "En mantenimiento"
         vehiculo.operador = usuario
         Vehiculo.actualizar()
