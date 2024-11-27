@@ -131,7 +131,7 @@ def finalizar_mantenimiento(id):
     mantenimiento.fecha_fin = datetime.now()
     mantenimiento.estado = 'finalizado'
     
-    vehiculo = Vehiculo.encontrarPorId(mantenimiento.vehiculo)
+    vehiculo = Vehiculo.encontrarPorId(mantenimiento.vehiculo.id)
     vehiculo.estado = "Disponible"
     vehiculo.operador = None
     Vehiculo.actualizar()
